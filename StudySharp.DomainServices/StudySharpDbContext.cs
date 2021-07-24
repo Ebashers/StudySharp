@@ -9,7 +9,9 @@ namespace StudySharp.DomainServices
     public class StudySharpDbContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Teacher> Teachers { get; set; }
+#pragma warning disable 8618
         public StudySharpDbContext(DbContextOptions<StudySharpDbContext> options) : base(options)
+#pragma warning restore 8618
         {
         }
 

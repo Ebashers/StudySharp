@@ -13,8 +13,13 @@ namespace StudySharp.DomainServices
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddDbContext<StudySharpDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(ConnectionStrings.Default),
-                    assembly => assembly.MigrationsAssembly(typeof(StudySharpDbContext).Assembly.FullName)))
+            services.AddDbContext<StudySharpDbContext>(
+                options =>
+                {
+                    options.UseNpgsql(
+                        configuration.GetConnectionString(ConnectionStrings.Default),
+                        x => x.MigrationsAssembly(typeof(Startup).Assembly.GetName().FullName));
+                }, ServiceLifetime.Transient)
                 .AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<StudySharpDbContext>()
                 .AddDefaultTokenProviders();

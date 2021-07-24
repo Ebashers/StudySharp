@@ -22,11 +22,7 @@ namespace StudySharp.Teacher
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StudySharpDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(ConnectionStrings.Default),
-                assembly => assembly.MigrationsAssembly(typeof(StudySharpDbContext).Assembly.FullName)))
-                .AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<StudySharpDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddDomainServices(Configuration);
             services.AddAuthorization(opt => opt.AddPolicy(AuthorizationPolicies.TeacherPolicy, policy => policy.RequireRole(nameof(DomainRoles.Teacher))));
             services.AddRazorPages().AddRazorPagesOptions(config =>
             {
