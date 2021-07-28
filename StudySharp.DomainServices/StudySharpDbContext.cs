@@ -24,6 +24,7 @@ namespace StudySharp.DomainServices
         {
             builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = nameof(DomainRoles.Teacher), NormalizedName = nameof(DomainRoles.Teacher).ToUpper() });
             base.OnModelCreating(builder);
+            builder.ApplyConfigurationsFromAssembly(typeof(StudySharpDbContext).Assembly);
         }
     }
 }
