@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StudySharp.ApplicationServices;
 using StudySharp.DomainServices;
 using StudySharp.Shared.Constants;
 
@@ -21,12 +20,8 @@ namespace StudySharp.Student
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDomainServices(Configuration);
-            services.AddAuthorization(opt => opt.AddPolicy(AuthorizationPolicies.StudentPolicy, policy => policy.RequireRole(nameof(DomainRoles.Student))));
-            services.AddRazorPages().AddRazorPagesOptions(config =>
-            {
-                config.Conventions.AuthorizeFolder("/Student", AuthorizationPolicies.StudentPolicy);
-            }).AddRazorRuntimeCompilation();
+            services.AddDomainServices(Configuration).AddApplicationServices(Configuration);
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.ConfigureApplicationCookie(opt => opt.LoginPath = RedirectUrls.Unauthorized);
         }
 

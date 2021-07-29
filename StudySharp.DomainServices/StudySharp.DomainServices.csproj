@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
@@ -19,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudySharp.Domain\StudySharp.Domain.csproj" />
-    <ProjectReference Include="..\StudySharp.Shared\StudySharp.Shared.csproj" />
   </ItemGroup>
 
 </Project>

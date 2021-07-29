@@ -31,6 +31,6 @@ namespace StudySharp.Teacher
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
                     config.AddEnvironmentVariables();
-                });;
+                });
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StudySharp.ApplicationServices;
 using StudySharp.DomainServices;
 using StudySharp.Shared.Constants;
 
@@ -19,10 +20,9 @@ namespace StudySharp.Auth
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages().AddRazorPagesOptions(config => { config.Conventions.AuthorizePage("/Privacy"); })
-                .AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.ConfigureApplicationCookie(opt => opt.LoginPath = RedirectUrls.Unauthorized);
-            services.AddDomainServices(Configuration);
+            services.AddDomainServices(Configuration).AddApplicationServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
