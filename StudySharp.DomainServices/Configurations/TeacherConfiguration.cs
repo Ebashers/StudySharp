@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StudySharp.Domain.Teacher;
+using StudySharp.Domain.Models.Users;
 
 namespace StudySharp.DomainServices.Configurations
 {
@@ -12,7 +12,11 @@ namespace StudySharp.DomainServices.Configurations
                 .HasKey(_ => _.Id);
 
             builder
-                .Property(_ => _.Name)
+                .Property(_ => _.FirstName)
+                .IsRequired();
+
+            builder
+                .Property(_ => _.LastName)
                 .IsRequired();
         }
     }
