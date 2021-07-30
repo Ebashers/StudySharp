@@ -20,8 +20,7 @@ namespace StudySharp.DomainServices.Configurations
                 .IsRequired();
 
             builder
-                .Property(_ => _.RedactedAt)
-                .IsRequired();
+                .Property(_ => _.RedactedAt);
         }
     }
 }
