@@ -17,8 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudySharp.DomainServices\StudySharp.DomainServices.csproj" />
-    <ProjectReference Include="..\StudySharp.Shared\StudySharp.Shared.csproj" />
+    <ProjectReference Include="..\StudySharp.ApplicationServices\StudySharp.ApplicationServices.csproj" />
   </ItemGroup>
 
 </Project>

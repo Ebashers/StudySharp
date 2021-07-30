@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StudySharp.ApplicationServices;
 using StudySharp.DomainServices;
 using StudySharp.Shared.Constants;
 
@@ -22,12 +21,8 @@ namespace StudySharp.Teacher
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDomainServices(Configuration);
-            services.AddAuthorization(opt => opt.AddPolicy(AuthorizationPolicies.TeacherPolicy, policy => policy.RequireRole(nameof(DomainRoles.Teacher))));
-            services.AddRazorPages().AddRazorPagesOptions(config =>
-            {
-                config.Conventions.AuthorizeFolder("/Teacher", AuthorizationPolicies.TeacherPolicy);
-            }).AddRazorRuntimeCompilation();
+            services.AddDomainServices(Configuration).AddApplicationServices(Configuration);
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.ConfigureApplicationCookie(opt => opt.LoginPath = RedirectUrls.Unauthorized);
         }
 

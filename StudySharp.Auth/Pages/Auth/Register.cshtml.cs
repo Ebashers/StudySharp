@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using StudySharp.DomainServices.JwtService;
 using StudySharp.Shared.Constants;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,15 +23,18 @@ namespace StudySharp.Auth.Pages.Auth
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IJwtAuthManager _jwtAuthManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger)
+            ILogger<RegisterModel> logger,
+            IJwtAuthManager jwtAuthManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _jwtAuthManager = jwtAuthManager;
         }
 
         [BindProperty]
@@ -82,6 +88,13 @@ namespace StudySharp.Auth.Pages.Auth
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddToRoleAsync(user, roleValue.ToString());
 
+                    var res = _jwtAuthManager.GenerateTokens(user.UserName,
+                        new Claim[] {
+                            new Claim(ClaimTypes.Name, user.UserName),
+                            new Claim(ClaimTypes.Role, roleValue.ToString())
+                        },
+                        DateTime.UtcNow);
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -97,7 +110,7 @@ namespace StudySharp.Auth.Pages.Auth
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return Redirect("http://localhost:47543/Teacher/Index");
+                        return Redirect($"http://localhost:47543/Teacher/Index?token={res.AccessToken}");
                         //return LocalRedirect(returnUrl);
                     }
                 }
