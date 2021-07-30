@@ -1,6 +1,6 @@
-﻿namespace StudySharp.Domain.Teacher
+﻿namespace StudySharp.Domain.Models.Learning
 {
-    public sealed class Teacher
+    public class Tag
     {
         public int Id { get; set; }
         public string Name { get; set; }
