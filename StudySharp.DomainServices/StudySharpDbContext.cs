@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using StudySharp.Domain.Teacher;
+using StudySharp.Domain.Models.Users;
 using StudySharp.Shared.Constants;
 
 namespace StudySharp.DomainServices
