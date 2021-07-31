@@ -10,7 +10,6 @@ namespace StudySharp.Domain.Models.Learning
         public Course Course { get; set; }
         
         public List<TheoryBlock> TheoryBlocks { get; set; }
-
         public List<PracticalBlock> PracticalBlocks { get; set; }
     }
 }
