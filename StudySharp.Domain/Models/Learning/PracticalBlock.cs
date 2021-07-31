@@ -6,6 +6,7 @@
         public string Name { get; set; }
         public string Description { get; set; }
         
+        //connection part
         public int ContentId { get; set; }
         public Content Content { get; set; }
         
