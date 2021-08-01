@@ -24,6 +24,7 @@ namespace StudySharp.DomainServices.Configurations
                 .Property(_ => _.DateCreated)
                 .IsRequired();
             
+            // connections
             builder
                 .HasOne(_ => _.Content)
                 .WithOne(_ => _.Course)
@@ -31,6 +32,18 @@ namespace StudySharp.DomainServices.Configurations
 
             builder
                 .HasOne(_ => _.Teacher)
+                .WithMany(_ => _.Courses);
+
+            builder
+                .HasMany(_ => _.Content.PracticalBlocks)
+                .WithOne(_ => _.Course);
+
+            builder
+                .HasMany(_ => _.Content.TheoryBlocks)
+                .WithOne(_ => _.Course);
+
+            builder
+                .HasMany(_ => _.Tags)
                 .WithMany(_ => _.Courses);
         }
     }

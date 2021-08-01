@@ -7,5 +7,7 @@
         public string Description { get; set; }
         public int QuizId { get; set; }
         public Quiz Quiz { get; set; }
+        
+        public Course Course { get; set; }
     }
 }

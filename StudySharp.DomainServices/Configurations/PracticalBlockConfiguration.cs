@@ -19,6 +19,7 @@ namespace StudySharp.DomainServices.Configurations
                 .Property(_ => _.Description)
                 .IsRequired();
 
+            // configuration
             builder
                 .HasOne(_ => _.Quiz)
                 .WithOne(_ => _.PracticalBlock)
