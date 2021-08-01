@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,10 @@ namespace StudySharp.Student
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+
+                    var port = Environment.GetEnvironmentVariable("PORT");
+
+                    webBuilder.UseUrls($"http://+:{port}");
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureAppConfiguration((hostingContext, config) =>
                 {

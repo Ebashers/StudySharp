@@ -17,4 +17,4 @@ RUN dotnet publish "StudySharp.Student.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "StudySharp.Student.dll"]
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet StudySharp.Student.dll
