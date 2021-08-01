@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-    - dev
+    - STD-5
     - release/*
 
 jobs:
