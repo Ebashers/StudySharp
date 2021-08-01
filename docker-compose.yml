@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+  studysharp.auth:
+    image: studysharp.auth
+    build:
+      context: .
+      dockerfile: StudySharp.Auth/Dockerfile
+    ports:
+      - "5001:80"
+
+  studysharp.student:
+    image: studysharp.student
+    build:
+      context: .
+      dockerfile: StudySharp.Student/Dockerfile
+    ports:
+      - "5002:80"
+
+  studysharp.teacher:
+    image: studysharp.teacher
+    build:
+      context: .
+      dockerfile: StudySharp.Teacher/Dockerfile
+    ports:
+      - "5003:80"
