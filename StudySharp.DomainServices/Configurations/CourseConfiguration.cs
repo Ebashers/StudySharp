@@ -16,11 +16,16 @@ namespace StudySharp.DomainServices.Configurations
                 .IsRequired();
 
             builder
-                .Property(_ => _.CreatedAt)
-                .IsRequired();
+                .Property(_ => _.DateModified)
+                .IsRequired(false);
 
             builder
-                .Property(_ => _.RedactedAt);
+                .Property(_ => _.DateCreated)
+                .IsRequired();
+
+            //TODO: update this functional in scope STD-13
+            builder
+                .Ignore(_ => _.Content);
         }
     }
 }
