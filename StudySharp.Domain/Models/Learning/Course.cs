@@ -12,11 +12,9 @@ namespace StudySharp.Domain.Models.Learning
 
         //connection part
         public List<Tag> Tags { get; set; }
-
-        public int TeacherId { get; set; }
+        
         public Teacher Teacher { get; set; }
-
-        public int ContentId { get; set; }
+        
         public Content Content { get; set; }
 
         public DateTimeOffset DateCreated { get; private set; }
