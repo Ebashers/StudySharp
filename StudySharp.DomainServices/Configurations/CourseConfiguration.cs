@@ -34,6 +34,7 @@ namespace StudySharp.DomainServices.Configurations
                 .HasOne(_ => _.Teacher)
                 .WithMany(_ => _.Courses);
 
+            // damaged part
             builder
                 .HasMany(_ => _.Content.PracticalBlocks)
                 .WithOne(_ => _.Course);
@@ -41,7 +42,8 @@ namespace StudySharp.DomainServices.Configurations
             builder
                 .HasMany(_ => _.Content.TheoryBlocks)
                 .WithOne(_ => _.Course);
-
+            // damaged part end
+            
             builder
                 .HasMany(_ => _.Tags)
                 .WithMany(_ => _.Courses);
