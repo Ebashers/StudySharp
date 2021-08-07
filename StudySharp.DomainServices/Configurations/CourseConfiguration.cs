@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StudySharp.Domain.Models.Learning;
-using StudySharp.Domain.Models.Users;
 
 namespace StudySharp.DomainServices.Configurations
 {
@@ -26,27 +25,20 @@ namespace StudySharp.DomainServices.Configurations
             
             // connections
             builder
-                .HasOne(_ => _.Content)
-                .WithOne(_ => _.Course)
-                .HasForeignKey<Content>(_ => _.CourseId);
-
-            builder
                 .HasOne(_ => _.Teacher)
                 .WithMany(_ => _.Courses);
 
-            // damaged part
-            builder
-                .HasMany(_ => _.Content.PracticalBlocks)
-                .WithOne(_ => _.Course);
-
-            builder
-                .HasMany(_ => _.Content.TheoryBlocks)
-                .WithOne(_ => _.Course);
-            // damaged part end
-            
             builder
                 .HasMany(_ => _.Tags)
                 .WithMany(_ => _.Courses);
+
+            builder
+                .HasMany(_ => _.TheoryBlocks)
+                .WithOne(_ => _.Course);
+
+            builder
+                .HasMany(_ => _.PracticalBlocks)
+                .WithOne(_ => _.Course);
         }
     }
 }

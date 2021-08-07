@@ -12,11 +12,11 @@ namespace StudySharp.Domain.Models.Learning
 
         //connection part
         public List<Tag> Tags { get; set; }
-        
         public Teacher Teacher { get; set; }
-        
-        public Content Content { get; set; }
+        public List<TheoryBlock> TheoryBlocks { get; set; }
+        public List<PracticalBlock> PracticalBlocks { get; set; }
 
+        //datetime part
         public DateTimeOffset DateCreated { get; private set; }
         public DateTimeOffset? DateModified { get; private set; }
         void IWithDateCreated.SetDateCreated(DateTimeOffset value) => DateCreated = value;
