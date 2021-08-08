@@ -6,7 +6,7 @@
         public string Name { get; set; }
         public string Description { get; set; }
         
-        //connection part
+        public int CourseId { get; set; }
         public Course Course { get; set; }
     }
 }

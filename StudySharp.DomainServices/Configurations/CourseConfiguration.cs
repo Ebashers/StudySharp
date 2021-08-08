@@ -23,10 +23,10 @@ namespace StudySharp.DomainServices.Configurations
                 .Property(_ => _.DateCreated)
                 .IsRequired();
             
-            // connections
             builder
                 .HasOne(_ => _.Teacher)
-                .WithMany(_ => _.Courses);
+                .WithMany(_ => _.Courses)
+                .HasForeignKey(_ => _.TeacherId);
 
             builder
                 .HasMany(_ => _.Tags)
@@ -34,11 +34,13 @@ namespace StudySharp.DomainServices.Configurations
 
             builder
                 .HasMany(_ => _.TheoryBlocks)
-                .WithOne(_ => _.Course);
+                .WithOne(_ => _.Course)
+                .HasForeignKey(_ => _.CourseId);
 
             builder
                 .HasMany(_ => _.PracticalBlocks)
-                .WithOne(_ => _.Course);
+                .WithOne(_ => _.Course)
+                .HasForeignKey(_ => _.CourseId);
         }
     }
 }
