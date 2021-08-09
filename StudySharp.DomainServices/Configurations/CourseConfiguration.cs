@@ -22,10 +22,25 @@ namespace StudySharp.DomainServices.Configurations
             builder
                 .Property(_ => _.DateCreated)
                 .IsRequired();
-
-            //TODO: update this functional in scope STD-13
+            
             builder
-                .Ignore(_ => _.Content);
+                .HasOne(_ => _.Teacher)
+                .WithMany(_ => _.Courses)
+                .HasForeignKey(_ => _.TeacherId);
+
+            builder
+                .HasMany(_ => _.Tags)
+                .WithMany(_ => _.Courses);
+
+            builder
+                .HasMany(_ => _.TheoryBlocks)
+                .WithOne(_ => _.Course)
+                .HasForeignKey(_ => _.CourseId);
+
+            builder
+                .HasMany(_ => _.PracticalBlocks)
+                .WithOne(_ => _.Course)
+                .HasForeignKey(_ => _.CourseId);
         }
     }
 }
