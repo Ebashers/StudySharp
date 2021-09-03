@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.Contracts;
 using StudySharp.Domain.Models.Learning;
 using StudySharp.Domain.Models.Users;
-using StudySharp.Shared.Constants;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StudySharp.DomainServices
 {
@@ -28,7 +27,6 @@ namespace StudySharp.DomainServices
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = nameof(DomainRoles.Teacher), NormalizedName = nameof(DomainRoles.Teacher).ToUpper() });
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(StudySharpDbContext).Assembly);
         }

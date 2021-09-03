@@ -1,6 +1,6 @@
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Linq;
 
 namespace StudySharp.DomainServices
 {
