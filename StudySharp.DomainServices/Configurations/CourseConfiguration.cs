@@ -22,7 +22,7 @@ namespace StudySharp.DomainServices.Configurations
             builder
                 .Property(_ => _.DateCreated)
                 .IsRequired();
-            
+
             builder
                 .HasOne(_ => _.Teacher)
                 .WithMany(_ => _.Courses)

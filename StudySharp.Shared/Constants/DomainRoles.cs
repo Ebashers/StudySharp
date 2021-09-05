@@ -2,9 +2,10 @@
 {
     public enum DomainRoles
     {
-        Teacher,
-        Student,
-        Admin,
-        Moderator
+        Unknown = 0,
+        Teacher = 1,
+        Student = 2,
+        Moderator = 3,
+        Admin = 4
     }
 }
