@@ -1,4 +1,4 @@
-﻿namespace StudySharp.Shared.Constants
+﻿namespace StudySharp.Domain.Enums
 {
     public enum DomainRoles
     {

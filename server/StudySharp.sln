@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudySharp.DomainServices",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudySharp.ApplicationServices", "StudySharp.ApplicationServices\StudySharp.ApplicationServices.csproj", "{C8FC4827-511A-4886-B459-9828B86B37C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudySharp.Shared", "StudySharp.Shared\StudySharp.Shared.csproj", "{5E0323F6-2C38-4442-BD04-5B9A09B709DD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudySharp.API", "StudySharp.API\StudySharp.API.csproj", "{F54E8417-052D-4791-94DA-02FB73FB1CAC}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{C8FC4827-511A-4886-B459-9828B86B37C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8FC4827-511A-4886-B459-9828B86B37C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8FC4827-511A-4886-B459-9828B86B37C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E0323F6-2C38-4442-BD04-5B9A09B709DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E0323F6-2C38-4442-BD04-5B9A09B709DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E0323F6-2C38-4442-BD04-5B9A09B709DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E0323F6-2C38-4442-BD04-5B9A09B709DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F54E8417-052D-4791-94DA-02FB73FB1CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F54E8417-052D-4791-94DA-02FB73FB1CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F54E8417-052D-4791-94DA-02FB73FB1CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU

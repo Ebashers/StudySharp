@@ -1,4 +1,4 @@
-﻿namespace StudySharp.Shared.Constants
+﻿namespace StudySharp.DomainServices.Constants
 {
     public static class ConnectionStrings
     {

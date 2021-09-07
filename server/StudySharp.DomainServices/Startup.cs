@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SqlKata.Compilers;
-using StudySharp.Shared.Constants;
+using StudySharp.DomainServices.Constants;
 
 namespace StudySharp.DomainServices
 {
