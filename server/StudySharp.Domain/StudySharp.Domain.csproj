@@ -5,8 +5,4 @@
 	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\StudySharp.Shared\StudySharp.Shared.csproj" />
-  </ItemGroup>
-
 </Project>
