@@ -1,11 +1,10 @@
 ﻿using StudySharp.Domain.Contracts;
-using StudySharp.Domain.Models.Users;
 using System;
 using System.Collections.Generic;
 
-namespace StudySharp.Domain.Models.Learning
+namespace StudySharp.Domain.Models
 {
-    public class Course : IWithDateCreated, IWithDateModified
+    public sealed class Course : IWithDateCreated, IWithDateModified
     {
         public int Id { get; set; }
         public string Name { get; set; }

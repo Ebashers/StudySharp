@@ -1,6 +1,6 @@
-﻿namespace StudySharp.Domain.Models.Learning
+﻿namespace StudySharp.Domain.Models
 {
-    public class TheoryBlock
+    public sealed class TheoryBlock
     {
         public int Id { get; set; }
         public string Name { get; set; }

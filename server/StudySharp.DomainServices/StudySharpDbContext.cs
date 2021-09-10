@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.Contracts;
-using StudySharp.Domain.Models.Learning;
-using StudySharp.Domain.Models.Users;
+using StudySharp.Domain.Models;
 using System;
 using System.Linq;
 using System.Threading;
