@@ -1,6 +1,6 @@
-﻿namespace StudySharp.Domain.Models.Learning
+﻿namespace StudySharp.Domain.Models
 {
-    public class Quiz
+    public sealed class Quiz
     {
         public int Id { get; set; }
         public PracticalBlock PracticalBlock { get; set; }

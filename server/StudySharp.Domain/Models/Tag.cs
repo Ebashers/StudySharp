@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace StudySharp.Domain.Models.Learning
+namespace StudySharp.Domain.Models
 {
-    public class Tag
+    public sealed class Tag
     {
         public int Id { get; set; }
         public string Name { get; set; }

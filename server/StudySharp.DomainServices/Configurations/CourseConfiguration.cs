@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StudySharp.Domain.Models.Learning;
+using StudySharp.Domain.Models;
 
 namespace StudySharp.DomainServices.Configurations
 {
