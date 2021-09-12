@@ -11,6 +11,8 @@ namespace StudySharp.DomainServices.Repositories
     {
         private StudySharpDbContext context;
         
+        
+        
         public Task<OperationResult<TheoryBlock>> CreateTheoryBlockAsync(TheoryBlock theoryBlock)
         {
             context.TheoryBlocks.Add(theoryBlock);
