@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.General;
@@ -10,34 +12,60 @@ namespace StudySharp.DomainServices.Repositories
     public sealed class TheoryBlockRepository : ITheoryBlockRepository
     {
         private StudySharpDbContext context;
-        
-        
-        
-        public Task<OperationResult<TheoryBlock>> CreateTheoryBlockAsync(TheoryBlock theoryBlock)
+
+        public TheoryBlockRepository(StudySharpDbContext _context)
         {
-            context.TheoryBlocks.Add(theoryBlock);
+            context = _context;
+        }
+        
+        public async Task<OperationResult<TheoryBlock>> CreateTheoryBlockAsync(TheoryBlock theoryBlock)
+        {
+            await context.TheoryBlocks.AddAsync(theoryBlock);
+            return new OperationResult<TheoryBlock>() { Result = theoryBlock, IsSucceeded = true };
         }
 
-        public Task<OperationResult<TheoryBlock>> GetTheoryBlockByIdAsync(int id)
+        public async Task<OperationResult<TheoryBlock>> GetTheoryBlockByIdAsync(int id)
         {
-            return context.TheoryBlocks.Find(id);
+            var theoryBlock = await context.TheoryBlocks.FindAsync(id);
+            if (theoryBlock == null)
+            {
+                var result = new OperationResult<TheoryBlock>() { Result = null, IsSucceeded = false };
+                result.Errors.Add("Could not find TheoryBlock`s Id");
+                return result;
+            }
+            return new OperationResult<TheoryBlock>(){ Result = theoryBlock, IsSucceeded = true };
         }
 
-        public Task<OperationResult<List<TheoryBlock>>> GetTheoryBlocksByCourseIdAsync(int courseId)
+        public async Task<OperationResult<List<TheoryBlock>>> GetTheoryBlocksByCourseIdAsync(int courseId)
         {
-            return context.Courses.Find(courseId);
+            await context.Courses.FindAsync(courseId);
+            var theoryBlocks = await context.TheoryBlocks.Where(_ => _.CourseId == courseId).ToListAsync();
+            if (theoryBlocks == null)
+            {
+                var result = new OperationResult<List<TheoryBlock>>() { Result = null, IsSucceeded = false };
+                result.Errors.Add("There`re no matches between TheoryBlock.CourseId and courseId");
+                return result;
+            }
+            return new OperationResult<List<TheoryBlock>>(){ Result = theoryBlocks, IsSucceeded = true };
         }
 
-        public Task<OperationResult<TheoryBlock>> UpdateTheoryBlockAsync(TheoryBlock theoryBlock)
+        public async Task<OperationResult<TheoryBlock>> UpdateTheoryBlockAsync(TheoryBlock theoryBlock)
         {
             context.Entry(theoryBlock).State = EntityState.Modified;
+            return new OperationResult<TheoryBlock>() { Result = theoryBlock, IsSucceeded = true };
         }
 
-        public Task<OperationResult<TheoryBlock>> RemoveTheoryBlockByIdAsync(int id)
+        public async Task<OperationResult<TheoryBlock>> RemoveTheoryBlockByIdAsync(int id)
         {
-            TheoryBlock theoryBlock = context.TheoryBlocks.Find(id);
-            if (theoryBlock != null)
-                context.TheoryBlocks.Remove(theoryBlock);
+            var theoryBlock = await context.TheoryBlocks.FindAsync(id);
+            if (theoryBlock == null)
+            {
+                var result = new OperationResult<TheoryBlock>() { Result = null, IsSucceeded = false };
+                result.Errors.Add("Could not find TheoryBlock`s Id");
+                return result;
+            }
+            context.TheoryBlocks.Remove(theoryBlock);
+            return new OperationResult<TheoryBlock>(){ Result = theoryBlock, IsSucceeded = true };
         }
     }
 }
