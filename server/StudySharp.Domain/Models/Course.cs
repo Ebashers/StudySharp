@@ -1,6 +1,6 @@
-﻿using StudySharp.Domain.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using StudySharp.Domain.Contracts;
 
 namespace StudySharp.Domain.Models
 {

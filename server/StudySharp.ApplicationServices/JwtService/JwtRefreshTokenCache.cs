@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 
 namespace StudySharp.DomainServices.JwtService
 {
     public class JwtRefreshTokenCache : IHostedService, IDisposable
     {
-        private Timer _timer;
         private readonly IJwtAuthManager _jwtAuthManager;
+        private Timer _timer;
 
         public JwtRefreshTokenCache(IJwtAuthManager jwtAuthManager)
         {
