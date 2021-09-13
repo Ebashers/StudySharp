@@ -1,8 +1,9 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentValidation;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;

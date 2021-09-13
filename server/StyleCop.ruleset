@@ -184,6 +184,7 @@
     <Rule Id="CS8305" Action="None" />
     <Rule Id="CS8313" Action="None" />
     <Rule Id="CS8321" Action="None" />
+    <Rule Id="CS8618" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.EditorFeatures" RuleNamespace="Microsoft.CodeAnalysis.CSharp.EditorFeatures">
     <Rule Id="IDE0032" Action="None" />
@@ -639,5 +640,6 @@
     <Rule Id="SA1651" Action="None" />
     <Rule Id="SA1652" Action="None" />
     <Rule Id="SX1309" Action="Error" />
+    <Rule Id="CC0091" Action="None" />
   </Rules>
 </RuleSet>

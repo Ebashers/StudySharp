@@ -39,6 +39,7 @@ namespace StudySharp.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudySharp.API v1"));
             }
+
             app
                 .UseMiddleware<GlobalErrorHandler>()
                 .UseRouting()

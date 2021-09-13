@@ -5,8 +5,10 @@ namespace StudySharp.Domain.General
     public class OperationResult
     {
         public bool IsSucceeded { get; set; }
-        public List<string> Errors { get; set; }
-        public static OperationResult<TResponse> Ok<TResponse>(TResponse result) where TResponse : class => new ()
+        public List<string>? Errors { get; set; }
+        public static OperationResult<TResponse> Ok<TResponse>(TResponse result)
+            where TResponse : class
+            => new ()
         {
             Result = result,
             Errors = null,
@@ -34,7 +36,9 @@ namespace StudySharp.Domain.General
             IsSucceeded = false,
         };
     }
-    public sealed class OperationResult<TResponse> : OperationResult where TResponse : class
+
+    public sealed class OperationResult<TResponse> : OperationResult
+        where TResponse : class
     {
         public TResponse Result { get; set; }
     }
