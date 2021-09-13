@@ -18,7 +18,7 @@ namespace StudySharp.DomainServices.JwtService
         JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now);
         void RemoveExpiredRefreshTokens(DateTime now);
         void RemoveRefreshTokenByUserName(string userName);
-        (ClaimsPrincipal, JwtSecurityToken) DecodeJwtToken(string token);
+        (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token);
     }
 
     public class JwtAuthManager : IJwtAuthManager
@@ -70,14 +70,14 @@ namespace StudySharp.DomainServices.JwtService
             {
                 UserName = username,
                 TokenString = GenerateRefreshTokenString(),
-                ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration)
+                ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration),
             };
             _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (_, _) => refreshToken);
 
             return new JwtAuthResult
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
             };
         }
 
@@ -103,7 +103,7 @@ namespace StudySharp.DomainServices.JwtService
             return GenerateTokens(userName, principal.Claims.ToArray(), now); // need to recover the original claims
         }
 
-        public (ClaimsPrincipal, JwtSecurityToken) DecodeJwtToken(string token)
+        public (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -122,7 +122,7 @@ namespace StudySharp.DomainServices.JwtService
                         ValidAudience = _jwtTokenConfig.Audience,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1)
+                        ClockSkew = TimeSpan.FromMinutes(1),
                     },
                     out var validatedToken);
             return (principal, validatedToken as JwtSecurityToken);
