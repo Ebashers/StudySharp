@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace StudySharp.DomainServices.JwtService
 {
@@ -94,6 +94,7 @@ namespace StudySharp.DomainServices.JwtService
             {
                 throw new SecurityTokenException("Invalid token");
             }
+
             if (existingRefreshToken.UserName != userName || existingRefreshToken.ExpireAt < now)
             {
                 throw new SecurityTokenException("Invalid token");
@@ -108,8 +109,10 @@ namespace StudySharp.DomainServices.JwtService
             {
                 throw new SecurityTokenException("Invalid token");
             }
+
             var principal = new JwtSecurityTokenHandler()
-                .ValidateToken(token,
+                .ValidateToken(
+                    token,
                     new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -146,9 +149,10 @@ namespace StudySharp.DomainServices.JwtService
     public class RefreshToken
     {
         [JsonPropertyName("username")]
-        public string UserName { get; set; }    // can be used for usage tracking
-        // can optionally include other metadata, such as user agent, ip address, device name, and so on
+        public string UserName { get; set; }
 
+        // can be used for usage tracking
+        // can optionally include other metadata, such as user agent, ip address, device name, and so on
         [JsonPropertyName("tokenString")]
         public string TokenString { get; set; }
 
