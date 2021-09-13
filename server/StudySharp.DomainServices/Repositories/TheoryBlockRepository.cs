@@ -17,6 +17,13 @@ namespace StudySharp.DomainServices.Repositories
         {
             _context = context;
         }
+
+        private OperationResult<TheoryBlock> AlternativeResult(string errorText)
+        {
+            var result = new OperationResult<TheoryBlock> { Result = null, IsSucceeded = false };
+            result.Errors.Add(errorText);
+            return result;
+        }
         
         public async Task<OperationResult<TheoryBlock>> CreateTheoryBlockAsync(TheoryBlock theoryBlock)
         {
@@ -30,9 +37,7 @@ namespace StudySharp.DomainServices.Repositories
             var theoryBlock = await _context.TheoryBlocks.FindAsync(id);
             if (theoryBlock == null)
             {
-                var result = new OperationResult<TheoryBlock> { Result = null, IsSucceeded = false };
-                result.Errors.Add("Could not find TheoryBlock`s Id");
-                return result;
+                return AlternativeResult("Could not find TheoryBlock`s Id");
             }
             return new OperationResult<TheoryBlock> { Result = theoryBlock, IsSucceeded = true };
         }
@@ -47,9 +52,7 @@ namespace StudySharp.DomainServices.Repositories
         {
             if (theoryBlock == null)
             {
-                var result = new OperationResult<TheoryBlock> { Result = null, IsSucceeded = false };
-                result.Errors.Add("There`s no TheoryBlock you can modify");
-                return result;
+                return AlternativeResult("There`s no TheoryBlock you can modify");
             }
             _context.Entry(theoryBlock).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -61,9 +64,7 @@ namespace StudySharp.DomainServices.Repositories
             var theoryBlock = await _context.TheoryBlocks.FindAsync(id);
             if (theoryBlock == null)
             {
-                var result = new OperationResult<TheoryBlock> { Result = null, IsSucceeded = false };
-                result.Errors.Add("Could not find TheoryBlock`s Id");
-                return result;
+                return AlternativeResult("Could not find TheoryBlock`s Id");
             }
             _context.TheoryBlocks.Remove(theoryBlock);
             await _context.SaveChangesAsync();
