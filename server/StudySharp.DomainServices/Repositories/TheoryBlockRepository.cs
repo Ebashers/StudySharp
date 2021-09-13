@@ -44,7 +44,6 @@ namespace StudySharp.DomainServices.Repositories
 
         public async Task<OperationResult<TheoryBlock>> UpdateTheoryBlockAsync(TheoryBlock theoryBlock)
         {
-            // potentially deleted if statement
             if (theoryBlock == null)
             {
                 var result = new OperationResult<TheoryBlock>() { Result = null, IsSucceeded = false };
