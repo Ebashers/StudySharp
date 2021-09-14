@@ -12,7 +12,7 @@ WORKDIR "/src/StudySharp.API"
 RUN dotnet build "StudySharp.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "StudySharp.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "StudySharp.API.csproj" -c Development -o /app/publish
 
 FROM base AS final
 WORKDIR /app
