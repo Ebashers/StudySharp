@@ -9,10 +9,10 @@ COPY ["StudySharp.API/StudySharp.API.csproj", "StudySharp.API/"]
 RUN dotnet restore "StudySharp.API/StudySharp.API.csproj"
 COPY . .
 WORKDIR "/src/StudySharp.API"
-RUN dotnet build "StudySharp.API.csproj" -c Development -o /app/build
+RUN dotnet build "StudySharp.API.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "StudySharp.API.csproj" -c Development -o /app/publish
+RUN dotnet publish "StudySharp.API.csproj" -c Debug -o /app/publish
 
 FROM base AS final
 WORKDIR /app
