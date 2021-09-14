@@ -32,7 +32,8 @@ namespace StudySharp.API.Controllers
         public async Task<OperationResult> Get()
         {
             var rng = new Random();
-            _context.Courses.Add(new Course { Name = "CoolCourse" });
+            await _context.Courses.AddAsync(new Course { Name = "CoolCourse" });
+            await _context.SaveChangesAsync();
             return OperationResult.Ok(_context.Courses.ToList());
         }
     }
