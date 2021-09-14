@@ -31,10 +31,9 @@ namespace StudySharp.API.Controllers
         [HttpGet]
         public async Task<OperationResult> Get()
         {
-            var rng = new Random();
-            await _context.Courses.AddAsync(new Course { Name = "CoolCourse" });
+            await _context.Tags.AddAsync(new Tag { Name = "CoolCourse" });
             await _context.SaveChangesAsync();
-            return OperationResult.Ok(_context.Courses.ToList());
+            return OperationResult.Ok(_context.Tags.ToList());
         }
     }
 }
