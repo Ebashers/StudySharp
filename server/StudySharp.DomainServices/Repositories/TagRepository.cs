@@ -26,14 +26,14 @@ namespace StudySharp.DomainServices.Repositories
         public async Task<OperationResult<Tag>> GetTagByIdAsync(int id)
         {
             var tag = await _context.Tags.FindAsync(id);
-            if (tag != null)
+            if (tag == null)
             {
-                return new OperationResult<Tag>() {Result = tag, IsSucceeded = true};
+                var result = new OperationResult<Tag>() { Result = null, IsSucceeded = false };
+                result.Errors.Add($"Could not find the tag with id = {id}");
+                return result;
             }
-            
-            var result = new OperationResult<Tag>() {Result = null, IsSucceeded = false};
-            result.Errors.Add($"Could not find the tag with id = {id}");
-            return result;
+
+            return new OperationResult<Tag>() { Result = tag, IsSucceeded = true };
         }
 
         public async Task<OperationResult<List<Tag>>> GetTagsAsync()
@@ -45,16 +45,16 @@ namespace StudySharp.DomainServices.Repositories
         public async Task<OperationResult<Tag>> RemoveTagByIdAsync(int id)
         {
             var tag = await _context.Tags.FindAsync(id);
-            if (tag != null)
+            if (tag == null)
             {
-                _context.Tags.Remove(tag);
-                await _context.SaveChangesAsync();
-                return new OperationResult<Tag>() {Result = tag, IsSucceeded = true};
+                var result = new OperationResult<Tag>() { Result = null, IsSucceeded = false };
+                result.Errors.Add($"Could not find the tag with id = {id}");
+                return result;
             }
 
-            var result = new OperationResult<Tag>() {Result = null, IsSucceeded = false};
-            result.Errors.Add($"Could not find the tag with id = {id}");
-            return result;
+            _context.Tags.Remove(tag);
+            await _context.SaveChangesAsync();
+            return new OperationResult<Tag>() { Result = tag, IsSucceeded = true };
         }
     }
 }
