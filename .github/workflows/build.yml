@@ -20,6 +20,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore "server/StudySharp.API/StudySharp.API.csproj"
     - name: Build
-      run: dotnet build "StudySharp.API.csproj" --no-restore
+      run: dotnet build "server/StudySharp.API/StudySharp.API.csproj" --no-restore
     - name: Test
-      run: dotnet test "StudySharp.API.csproj" --no-build --verbosity normal
+      run: dotnet test "server/StudySharp.API/StudySharp.API.csproj" --no-build --verbosity normal
