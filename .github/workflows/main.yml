@@ -3,8 +3,7 @@ name: CI
 on:
   push:
     branches:
-    - STD-5
-    - release/*
+    - dev
 
 jobs:
   build_studysharp:
