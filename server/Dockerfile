@@ -17,4 +17,4 @@ RUN dotnet publish "StudySharp.API.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet Colors.API.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet StudySharp.API.dll
