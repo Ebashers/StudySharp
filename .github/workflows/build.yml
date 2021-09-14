@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore "StudySharp.API/StudySharp.API.csproj"
+      run: dotnet restore "server/StudySharp.API/StudySharp.API.csproj"
     - name: Build
       run: dotnet build "StudySharp.API.csproj" --no-restore
     - name: Test
