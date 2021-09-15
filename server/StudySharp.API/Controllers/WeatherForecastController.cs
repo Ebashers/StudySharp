@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StudySharp.ApplicationServices.Commands;
+using StudySharp.ApplicationServices.Queries;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
-using StudySharp.DomainServices;
 
 namespace StudySharp.API.Controllers
 {
@@ -16,24 +15,28 @@ namespace StudySharp.API.Controllers
     {
         private static readonly string[] Summaries = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorchingg",
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching",
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly StudySharpDbContext _context;
+        private readonly IMediator _mediator;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, StudySharpDbContext context)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator)
         {
             _logger = logger;
-            _context = context;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<OperationResult> Get()
+        public async Task<OperationResult<Tag>> Get([FromQuery] GetTagByIdQuery getTagByIdQuery)
         {
-            await _context.Tags.AddAsync(new Tag { Name = "CoolCourse" });
-            await _context.SaveChangesAsync();
-            return OperationResult.Ok(_context.Tags.ToList());
+            return await _mediator.Send<OperationResult<Tag>>(getTagByIdQuery);
+        }
+
+        [HttpPost]
+        public async Task<OperationResult> Add([FromBody] AddTagCommand addTagCommand)
+        {
+            return await _mediator.Send<OperationResult>(addTagCommand);
         }
     }
 }
