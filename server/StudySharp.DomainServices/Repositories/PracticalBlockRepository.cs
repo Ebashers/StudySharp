@@ -8,7 +8,7 @@ using StudySharp.Domain.Repositories;
 
 namespace StudySharp.DomainServices.Repositories
 {
-    public class PracticalBlockRepository : IPracticalBlockRepository
+    public sealed class PracticalBlockRepository : IPracticalBlockRepository
     {
         private readonly StudySharpDbContext _context;
 
