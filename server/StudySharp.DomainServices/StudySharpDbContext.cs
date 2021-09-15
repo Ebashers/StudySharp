@@ -15,7 +15,7 @@ namespace StudySharp.DomainServices
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<PracticalBlock> PracticalBlocks { get; set; }
-        public DbSet<PracticalBlock> TheoryBlocks { get; set; }
+        public DbSet<TheoryBlock> TheoryBlocks { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Tag> Tags { get; set; }
 #pragma warning disable 8618
