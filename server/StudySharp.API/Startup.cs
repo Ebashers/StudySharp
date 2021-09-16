@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using StudySharp.API.Middlewares;
 using StudySharp.ApplicationServices;
 using StudySharp.DomainServices;
 
@@ -39,16 +40,15 @@ namespace StudySharp.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudySharp.API v1"));
             }
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            app
+                .UseMiddleware<GlobalErrorHandler>()
+                .UseRouting()
+                .UseAuthorization()
+                .UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            app.EnsureDbMigrated<StudySharpDbContext>();
+            })
+                .EnsureDbMigrated<StudySharpDbContext>();
         }
     }
 }

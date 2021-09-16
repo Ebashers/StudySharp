@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace StudySharp.DomainServices.JwtService
 {
@@ -18,7 +18,7 @@ namespace StudySharp.DomainServices.JwtService
         JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now);
         void RemoveExpiredRefreshTokens(DateTime now);
         void RemoveRefreshTokenByUserName(string userName);
-        (ClaimsPrincipal, JwtSecurityToken) DecodeJwtToken(string token);
+        (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token);
     }
 
     public class JwtAuthManager : IJwtAuthManager
@@ -70,14 +70,14 @@ namespace StudySharp.DomainServices.JwtService
             {
                 UserName = username,
                 TokenString = GenerateRefreshTokenString(),
-                ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration)
+                ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration),
             };
             _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (_, _) => refreshToken);
 
             return new JwtAuthResult
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
             };
         }
 
@@ -94,6 +94,7 @@ namespace StudySharp.DomainServices.JwtService
             {
                 throw new SecurityTokenException("Invalid token");
             }
+
             if (existingRefreshToken.UserName != userName || existingRefreshToken.ExpireAt < now)
             {
                 throw new SecurityTokenException("Invalid token");
@@ -102,14 +103,16 @@ namespace StudySharp.DomainServices.JwtService
             return GenerateTokens(userName, principal.Claims.ToArray(), now); // need to recover the original claims
         }
 
-        public (ClaimsPrincipal, JwtSecurityToken) DecodeJwtToken(string token)
+        public (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
                 throw new SecurityTokenException("Invalid token");
             }
+
             var principal = new JwtSecurityTokenHandler()
-                .ValidateToken(token,
+                .ValidateToken(
+                    token,
                     new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -119,7 +122,7 @@ namespace StudySharp.DomainServices.JwtService
                         ValidAudience = _jwtTokenConfig.Audience,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1)
+                        ClockSkew = TimeSpan.FromMinutes(1),
                     },
                     out var validatedToken);
             return (principal, validatedToken as JwtSecurityToken);
@@ -146,9 +149,10 @@ namespace StudySharp.DomainServices.JwtService
     public class RefreshToken
     {
         [JsonPropertyName("username")]
-        public string UserName { get; set; }    // can be used for usage tracking
-        // can optionally include other metadata, such as user agent, ip address, device name, and so on
+        public string UserName { get; set; }
 
+        // can be used for usage tracking
+        // can optionally include other metadata, such as user agent, ip address, device name, and so on
         [JsonPropertyName("tokenString")]
         public string TokenString { get; set; }
 

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StudySharp.DomainServices.JwtService;
-using System;
-using System.Text;
 
 namespace StudySharp.ApplicationServices
 {
@@ -14,7 +14,6 @@ namespace StudySharp.ApplicationServices
             this IServiceCollection services,
             IConfiguration configuration)
         {
-
             var jwtTokenConfig = configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
             services.AddAuthentication(x =>
@@ -34,7 +33,7 @@ namespace StudySharp.ApplicationServices
                     ValidAudience = jwtTokenConfig.Audience,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromMinutes(1)
+                    ClockSkew = TimeSpan.FromMinutes(1),
                 };
             });
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();

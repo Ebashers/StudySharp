@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.Contracts;
 using StudySharp.Domain.Models;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StudySharp.DomainServices
 {
@@ -19,7 +19,8 @@ namespace StudySharp.DomainServices
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Tag> Tags { get; set; }
 #pragma warning disable 8618
-        public StudySharpDbContext(DbContextOptions<StudySharpDbContext> options) : base(options)
+        public StudySharpDbContext(DbContextOptions<StudySharpDbContext> options)
+            : base(options)
 #pragma warning restore 8618
         {
         }
