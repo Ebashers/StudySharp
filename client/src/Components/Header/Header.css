@@ -1,0 +1,13 @@
+.header{
+    height: 64px;
+    background-color: #673AB7;
+    width: 100vw;
+}
+
+.wrapper{
+    margin: 0 auto;
+    width: 1140px;
+    height: 64px;
+    display: flex;
+    position: relative;
+}
