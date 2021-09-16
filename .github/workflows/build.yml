@@ -1,0 +1,25 @@
+name: Build check
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore "server/StudySharp.API/StudySharp.API.csproj"
+    - name: Build
+      run: dotnet build "server/StudySharp.API/StudySharp.API.csproj" --no-restore
+    - name: Test
+      run: dotnet test "server/StudySharp.API/StudySharp.API.csproj" --no-build --verbosity normal
