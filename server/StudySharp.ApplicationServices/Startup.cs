@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +40,7 @@ namespace StudySharp.ApplicationServices
             });
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddHostedService<JwtRefreshTokenCache>();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             return services;
         }
