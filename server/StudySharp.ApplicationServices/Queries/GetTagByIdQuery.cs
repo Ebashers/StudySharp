@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
 using StudySharp.DomainServices;
@@ -26,7 +27,7 @@ namespace StudySharp.ApplicationServices.Queries
             var tag = await _studySharpDbContext.Tags.FindAsync(request.Id);
             if (tag == null)
             {
-                return OperationResult.Fail<Tag>($"Could not found tag with Id [{request.Id}]");
+                return OperationResult.Fail<Tag>(string.Format(ErrorConstants.EntityNotFound, nameof(Tag), nameof(Tag.Id), request.Id));
             }
 
             return OperationResult.Ok(tag);

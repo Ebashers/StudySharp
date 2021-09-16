@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
 using StudySharp.DomainServices;
@@ -26,7 +27,7 @@ namespace StudySharp.ApplicationServices.Commands
         {
             if (await _studySharpDbContext.Tags.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower())))
             {
-                return OperationResult.Fail($"Tag with name [{request.Name}] already exists");
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(Tag), nameof(Tag.Name), request.Name));
             }
 
             await _studySharpDbContext.Tags.AddAsync(new Tag { Name = request.Name });
