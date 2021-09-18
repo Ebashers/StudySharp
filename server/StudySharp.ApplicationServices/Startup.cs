@@ -7,8 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StudySharp.ApplicationServices.EmailService;
-using StudySharp.Domain.Infrastructure.EmailService;
-using StudySharp.DomainServices.JwtService;
+using StudySharp.ApplicationServices.Infrastructure.EmailService;
+using StudySharp.ApplicationServices.JwtService;
 
 namespace StudySharp.ApplicationServices
 {

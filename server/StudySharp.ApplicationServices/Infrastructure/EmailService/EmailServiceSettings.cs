@@ -1,4 +1,4 @@
-namespace StudySharp.Domain.Infrastructure.EmailService
+namespace StudySharp.ApplicationServices.Infrastructure.EmailService
 {
     public class EmailServiceSettings
     {

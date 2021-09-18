@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 
-namespace StudySharp.DomainServices.JwtService
+namespace StudySharp.ApplicationServices.JwtService
 {
     public interface IJwtAuthManager
     {

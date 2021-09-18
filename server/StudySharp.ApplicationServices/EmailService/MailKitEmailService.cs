@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using StudySharp.Domain.Infrastructure.EmailService;
+using StudySharp.ApplicationServices.Infrastructure.EmailService;
 
 namespace StudySharp.ApplicationServices.EmailService
 {

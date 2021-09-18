@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace StudySharp.DomainServices.JwtService
+namespace StudySharp.ApplicationServices.JwtService
 {
     public class JwtRefreshTokenCache : IHostedService, IDisposable
     {
