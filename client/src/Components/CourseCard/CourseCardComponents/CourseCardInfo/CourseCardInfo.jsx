@@ -9,7 +9,6 @@ import "./CourseCardInfo.css"
 const CourseCardInfo = () => {
     const arr = [1, 1, 1, 1, 1]
 
-    console.log(arr)
     return (
         <div className="course">
             <div className="course__name">Name of the course

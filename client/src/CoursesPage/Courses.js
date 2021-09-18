@@ -3,6 +3,7 @@ import Header from "../Components/Header/Header";
 import CourseCard from "../Components/CourseCard/CourseCard";
 
 import "./Courses.css"
+import CourseAddButton from "../Components/CourseCard/AddCourseButton/CourseAddButton";
 
 const Courses = () => {
     const arr = [
@@ -17,7 +18,7 @@ const Courses = () => {
             <div className="cards">
                 {arr.map(el => el)}
             </div>
-            
+            <CourseAddButton/>
         </>
     );
 };

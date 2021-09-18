@@ -1,0 +1,16 @@
+.course-add-button{
+    width: 1140px;
+    margin: 0 auto;
+    height: 72px;
+    border-radius: 7px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: black;
+}
+.sign{
+    margin-right: 5px;
+}
+
