@@ -22,7 +22,10 @@ namespace StudySharp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDomainServices(Configuration).AddApplicationServices(Configuration);
+            services
+                .AddDomainServices(Configuration)
+                .AddApplicationServices(Configuration)
+                .AddEmailService(Configuration, "EmailConfig");
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
