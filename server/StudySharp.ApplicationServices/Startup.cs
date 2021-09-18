@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using StudySharp.ApplicationServices.EmailService;
+using StudySharp.Domain.Infrastructure.EmailService;
 using StudySharp.DomainServices.JwtService;
 
 namespace StudySharp.ApplicationServices
@@ -41,6 +43,14 @@ namespace StudySharp.ApplicationServices
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddHostedService<JwtRefreshTokenCache>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            return services;
+        }
+
+        public static IServiceCollection AddEmailService(this IServiceCollection services, IConfiguration configuration, string configurationSection)
+        {
+            services.Configure<EmailServiceSettings>(options => configuration.GetSection(configurationSection).Bind(options));
+            services.AddScoped<IEmailService, MailKitEmailService>();
 
             return services;
         }
