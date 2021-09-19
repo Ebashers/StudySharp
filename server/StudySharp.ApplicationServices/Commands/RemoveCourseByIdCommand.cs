@@ -25,7 +25,7 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(RemoveCourseByIdCommand request, CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.FirstOrDefaultAsync(c => Equals(c.Id, request.Id), cancellationToken);
+            var course = await _context.Courses.FindAsync(request.Id, cancellationToken);
             if (course == null)
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Name), request.Id));
