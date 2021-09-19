@@ -31,6 +31,11 @@ namespace StudySharp.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudySharp.API", Version = "v1" });
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +51,8 @@ namespace StudySharp.API
             app
                 .UseMiddleware<GlobalErrorHandler>()
                 .UseRouting()
+                .UseCors("AllowAll")
+                .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints =>
             {
