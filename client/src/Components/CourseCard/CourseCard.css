@@ -1,0 +1,19 @@
+.card{
+    height: 200px;
+    width: 1140px;
+    margin-bottom: 16px;
+    border-radius: 7px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.img{
+    height: 156px;
+    width: 255px;
+    background-color: #C4C4C4;
+    margin-left: 15px;
+    border-radius: 7px;
+}

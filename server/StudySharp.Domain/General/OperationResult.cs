@@ -9,11 +9,11 @@ namespace StudySharp.Domain.General
         public static OperationResult<TResponse> Ok<TResponse>(TResponse result)
             where TResponse : class
             => new ()
-        {
-            Result = result,
-            Errors = null,
-            IsSucceeded = true,
-        };
+            {
+                Result = result,
+                Errors = null,
+                IsSucceeded = true,
+            };
 
         public static OperationResult Ok() => new ()
         {
@@ -30,16 +30,37 @@ namespace StudySharp.Domain.General
             IsSucceeded = false,
         };
 
+        public static OperationResult<TResponse> Fail<TResponse>(string message)
+            where TResponse : class
+            => new ()
+            {
+                Result = null,
+                Errors = new List<string>
+            {
+                message,
+            },
+                IsSucceeded = false,
+            };
+
         public static OperationResult Fail(List<string> messages) => new ()
         {
             Errors = messages,
             IsSucceeded = false,
         };
+
+        public static OperationResult<TResponse> Fail<TResponse>(List<string> messages)
+            where TResponse : class
+            => new ()
+            {
+                Result = null,
+                Errors = messages,
+                IsSucceeded = false,
+            };
     }
 
     public sealed class OperationResult<TResponse> : OperationResult
         where TResponse : class
     {
-        public TResponse Result { get; set; }
+        public TResponse? Result { get; set; }
     }
 }
