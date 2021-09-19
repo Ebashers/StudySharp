@@ -18,6 +18,7 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class AddCourseCommandHandler : IRequestHandler<AddCourseCommand, OperationResult>
     {
         private readonly StudySharpDbContext _context;
+
         public AddCourseCommandHandler(StudySharpDbContext sharpDbContext)
         {
             _context = sharpDbContext;
@@ -25,15 +26,17 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddCourseCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.Courses.AnyAsync(c => c.Name.ToLower().Equals(request.Name.ToLower())))
+            if (await _context.Courses.AnyAsync(c => Equals(c.Name, request.Name) && Equals(c.TeacherId, request.TeacherId), cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(Course), nameof(Course.Name), request.Name));
             }
 
-            await _context.Courses.AddAsync(new Course
+            await _context.Courses.AddAsync(
+                new Course
             {
                 Name = request.Name, TeacherId = request.TeacherId,
-            });
+            }, cancellationToken);
+
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }

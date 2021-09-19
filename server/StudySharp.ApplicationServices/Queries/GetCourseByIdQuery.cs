@@ -25,7 +25,7 @@ namespace StudySharp.ApplicationServices.Queries
 
         public async Task<OperationResult<Course>> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.FindAsync(request.Id);
+            var course = await _context.Courses.FindAsync(request.Id, cancellationToken);
             if (course == null)
             {
                 return OperationResult.Fail<Course>(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), request.Id));
