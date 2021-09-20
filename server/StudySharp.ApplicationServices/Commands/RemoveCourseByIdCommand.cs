@@ -11,7 +11,7 @@ namespace StudySharp.ApplicationServices.Commands
 {
     public sealed class RemoveCourseByIdCommand : IRequest<OperationResult>
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
     }
 
     public sealed class RemoveCourseByIdCommandHandler : IRequestHandler<RemoveCourseByIdCommand, OperationResult>
