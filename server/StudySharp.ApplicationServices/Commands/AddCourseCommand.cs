@@ -33,9 +33,9 @@ namespace StudySharp.ApplicationServices.Commands
 
             await _context.Courses.AddAsync(
                 new Course
-            {
-                Name = request.Name, TeacherId = request.TeacherId,
-            }, cancellationToken);
+                {
+                    Name = request.Name, TeacherId = request.TeacherId,
+                }, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
