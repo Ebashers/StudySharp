@@ -25,13 +25,13 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddTagCommand request, CancellationToken cancellationToken)
         {
-            if (await _studySharpDbContext.Tags.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower())))
+            if (await _studySharpDbContext.Tags.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower()), cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(Tag), nameof(Tag.Name), request.Name));
             }
 
             await _studySharpDbContext.Tags.AddAsync(new Tag { Name = request.Name });
-            await _studySharpDbContext.SaveChangesAsync();
+            await _studySharpDbContext.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }
     }
