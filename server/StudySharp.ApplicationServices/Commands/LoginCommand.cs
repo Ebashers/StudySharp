@@ -45,7 +45,7 @@ namespace StudySharp.ApplicationServices.Commands
                 return OperationResult.Fail<LoginResult>(ErrorConstants.InvalidCredentials);
             }
 
-            var jwtResult = _jwtAuthManager.GenerateTokens(user.UserName, new Claim[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.UtcNow);
+            var jwtResult = _jwtAuthManager.GenerateTokens(user.UserName, new Claim[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.Now);
 
             return OperationResult.Ok(new LoginResult
             {

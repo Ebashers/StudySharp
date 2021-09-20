@@ -31,7 +31,7 @@ namespace StudySharp.ApplicationServices.Commands
             var user = await _userManager.FindByNameAsync(request.Email);
             if (user != null)
             {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, "User", "email", request.Email));
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, "User", nameof(request.Email), request.Email));
             }
 
             var newUser = new ApplicationUser
