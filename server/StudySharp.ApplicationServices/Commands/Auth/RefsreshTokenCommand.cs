@@ -56,7 +56,7 @@ namespace StudySharp.ApplicationServices.Commands.Auth
             }
             catch (SecurityTokenException exception)
             {
-                return OperationResult.Fail<RefreshTokenResult>(exception.Message); // return 401 so that the client side can redirect the user to login page
+                return OperationResult.Fail<RefreshTokenResult>(exception.Message);
             }
         }
     }
