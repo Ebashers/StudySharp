@@ -7,7 +7,7 @@ using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.DomainServices;
 
-namespace StudySharp.ApplicationServices.Commands
+namespace StudySharp.ApplicationServices.Commands.Auth
 {
     public sealed class RegisterNewUserCommand : IRequest<OperationResult>
     {

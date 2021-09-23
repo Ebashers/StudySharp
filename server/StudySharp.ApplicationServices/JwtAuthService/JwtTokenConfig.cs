@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace StudySharp.ApplicationServices.JwtService
+namespace StudySharp.ApplicationServices.JwtAuthService
 {
     public sealed class JwtTokenConfig
     {

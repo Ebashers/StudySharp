@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +26,8 @@ namespace StudySharp.API
             services
                 .AddDomainServices(Configuration)
                 .AddApplicationServices(Configuration)
-                .AddEmailService(Configuration, "EmailConfig");
+                .AddEmailService(Configuration, "EmailConfig")
+                .AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

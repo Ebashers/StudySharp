@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using StudySharp.ApplicationServices.JwtService;
+using StudySharp.ApplicationServices.JwtAuthService;
+using StudySharp.ApplicationServices.JwtAuthService.ResultModels;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.DomainServices;
 
-namespace StudySharp.ApplicationServices.Commands
+namespace StudySharp.ApplicationServices.Commands.Auth
 {
     public sealed class LoginCommand : IRequest<OperationResult<LoginResult>>
     {
@@ -21,13 +22,13 @@ namespace StudySharp.ApplicationServices.Commands
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IJwtAuthManager _jwtAuthManager;
+        private readonly IJwtService _jwtService;
 
-        public LoginCommandHandler(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IJwtAuthManager jwtAuthManager)
+        public LoginCommandHandler(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IJwtService jwtAuthManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _jwtAuthManager = jwtAuthManager;
+            _jwtService = jwtAuthManager;
         }
 
         public async Task<OperationResult<LoginResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -45,7 +46,7 @@ namespace StudySharp.ApplicationServices.Commands
                 return OperationResult.Fail<LoginResult>(ErrorConstants.InvalidCredentials);
             }
 
-            var jwtResult = _jwtAuthManager.GenerateTokens(user.UserName, new Claim[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.Now);
+            var jwtResult = _jwtService.GenerateTokens(user.UserName, new Claim[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.Now);
 
             return OperationResult.Ok(new LoginResult
             {

@@ -1,6 +1,6 @@
-﻿namespace StudySharp.ApplicationServices.JwtService
+﻿namespace StudySharp.API.Responses.Auth
 {
-    public sealed class LoginResult
+    public class LoginResponse
     {
         public string UserName { get; set; }
         public string Role { get; set; }

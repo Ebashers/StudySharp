@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StudySharp.ApplicationServices.EmailService;
 using StudySharp.ApplicationServices.Infrastructure.EmailService;
-using StudySharp.ApplicationServices.JwtService;
+using StudySharp.ApplicationServices.JwtAuthService;
 
 namespace StudySharp.ApplicationServices
 {
@@ -40,7 +40,7 @@ namespace StudySharp.ApplicationServices
                     ClockSkew = TimeSpan.FromMinutes(1),
                 };
             });
-            services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
+            services.AddSingleton<IJwtService, JwtService>();
             services.AddHostedService<JwtRefreshTokenCache>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
 

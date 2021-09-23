@@ -1,48 +1,44 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StudySharp.API.Requests;
-using StudySharp.API.Responses;
-using StudySharp.ApplicationServices.Commands;
-using StudySharp.ApplicationServices.JwtService;
+using StudySharp.API.Requests.Auth;
+using StudySharp.API.Responses.Auth;
+using StudySharp.ApplicationServices.Commands.Auth;
+using StudySharp.ApplicationServices.JwtAuthService.ResultModels;
 using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public AccountController(IMediator mediator)
+        public AccountController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<OperationResult> Register([FromBody] RegisterNewUserRequest registerNewUserRequest)
         {
-            // AutoMapper is required ASAP!!!
-            var registerNewUserCommand = new RegisterNewUserCommand
-            {
-                Email = registerNewUserRequest.Email,
-                Password = registerNewUserRequest.Password,
-                ConfirmPassword = registerNewUserRequest.ConfirmPassword,
-            };
+            var registerNewUserCommand = _mapper.Map<RegisterNewUserCommand>(registerNewUserRequest);
 
             return await _mediator.Send<OperationResult>(registerNewUserCommand);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<OperationResult<LoginResponse>> Login([FromBody] LoginRequest loginRequest)
         {
-            // AutoMapper is required ASAP!!!
-            var loginCommand = new LoginCommand
-            {
-                Email = loginRequest.Email,
-                Password = loginRequest.Password,
-            };
+            var loginCommand = _mapper.Map<LoginCommand>(loginRequest);
 
             var operationResult = await _mediator.Send<OperationResult<LoginResult>>(loginCommand);
 
@@ -51,13 +47,7 @@ namespace StudySharp.API.Controllers
                 return OperationResult.Fail<LoginResponse>(operationResult.Errors);
             }
 
-            var response = new LoginResponse
-            {
-                UserName = operationResult.Result.UserName,
-                AccessToken = operationResult.Result.AccessToken,
-                RefreshToken = operationResult.Result.RefreshToken,
-                Role = operationResult.Result.Role,
-            };
+            var response = _mapper.Map<LoginResponse>(operationResult.Result);
 
             return OperationResult.Ok<LoginResponse>(response);
         }
@@ -69,11 +59,27 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<OperationResult<LoginResult>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
+        public async Task<OperationResult<RefreshTokenResponse>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
             var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             var userName = User.Identity.Name;
-            return await _mediator.Send<OperationResult<LoginResult>>(new RefreshTokenCommand { AccessToken = accessToken, RefreshToken = refreshTokenRequest.RefreshToken, UserName = userName });
+            var refreshTokenCommand = new RefreshTokenCommand
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshTokenRequest.RefreshToken,
+                UserName = userName,
+            };
+
+            var operationResult = await _mediator.Send<OperationResult<RefreshTokenResult>>(refreshTokenCommand);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<RefreshTokenResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<RefreshTokenResponse>(operationResult.Result);
+
+            return OperationResult.Ok<RefreshTokenResponse>(response);
         }
     }
 }

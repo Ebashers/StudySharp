@@ -1,4 +1,4 @@
-﻿namespace StudySharp.API.Requests
+﻿namespace StudySharp.API.Requests.Auth
 {
     public sealed class LoginRequest
     {
