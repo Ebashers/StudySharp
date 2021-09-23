@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.Auth;
@@ -53,15 +54,16 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<OperationResult> Logout([FromBody] LogoutCommand logoutCommand)
+        public async Task<OperationResult> Logout()
         {
-            return await _mediator.Send<OperationResult>(logoutCommand);
+            var userName = User.Identity.Name;
+            return await _mediator.Send<OperationResult>(new LogoutCommand { UserName = userName });
         }
 
         [HttpPost("refresh-token")]
         public async Task<OperationResult<RefreshTokenResponse>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
-            var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
             var userName = User.Identity.Name;
             var refreshTokenCommand = new RefreshTokenCommand
             {

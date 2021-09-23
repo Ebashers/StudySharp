@@ -27,7 +27,7 @@ namespace StudySharp.ApplicationServices
             }).AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
-                x.SaveToken = false;
+                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -37,7 +37,7 @@ namespace StudySharp.ApplicationServices
                     ValidAudience = jwtTokenConfig.Audience,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromMinutes(1),
+                    ClockSkew = TimeSpan.Zero,
                 };
             });
             services.AddSingleton<IJwtService, JwtService>();

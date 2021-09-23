@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StudySharp.ApplicationServices.Commands;
@@ -11,6 +12,7 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
