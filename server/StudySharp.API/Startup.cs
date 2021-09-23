@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,11 +26,17 @@ namespace StudySharp.API
             services
                 .AddDomainServices(Configuration)
                 .AddApplicationServices(Configuration)
-                .AddEmailService(Configuration, "EmailConfig");
+                .AddEmailService(Configuration, "EmailConfig")
+                .AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudySharp.API", Version = "v1" });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
         }
 
@@ -46,6 +53,8 @@ namespace StudySharp.API
             app
                 .UseMiddleware<GlobalErrorHandler>()
                 .UseRouting()
+                .UseCors("AllowAll")
+                .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints =>
             {
