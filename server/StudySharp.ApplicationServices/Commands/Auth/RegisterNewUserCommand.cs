@@ -27,11 +27,15 @@ namespace StudySharp.ApplicationServices.Commands.Auth
 
         public async Task<OperationResult> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
         {
-            // compare passwords?
             var user = await _userManager.FindByNameAsync(request.Email);
             if (user != null)
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, "User", nameof(request.Email), request.Email));
+            }
+
+            if (!request.Password.Trim().Equals(request.ConfirmPassword.Trim()))
+            {
+                return OperationResult.Fail(ErrorConstants.PasswordsDoNotMatch);
             }
 
             var newUser = new ApplicationUser
@@ -39,6 +43,7 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 UserName = request.Email,
                 Email = request.Email,
             };
+
             var result = await _userManager.CreateAsync(newUser, request.Password);
 
             if (!result.Succeeded)
@@ -46,7 +51,6 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 return OperationResult.Fail(result.Errors.Select(_ => _.Description).ToList());
             }
 
-            // redirect to confirm email and then login?
             return OperationResult.Ok();
         }
     }

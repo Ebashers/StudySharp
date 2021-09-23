@@ -42,7 +42,7 @@ namespace StudySharp.ApplicationServices.Commands.Auth
 
                 if (string.IsNullOrEmpty(request.RefreshToken))
                 {
-                    return OperationResult.Fail<RefreshTokenResult>(ErrorConstants.InvalidCredentials);
+                    return OperationResult.Fail<RefreshTokenResult>(ErrorConstants.InvalidToken);
                 }
 
                 var jwtResult = _jwtService.Refresh(request.RefreshToken, request.AccessToken, DateTime.Now);
