@@ -13,6 +13,7 @@ namespace StudySharp.API.MapperProfiles
             CreateMap<RegisterNewUserRequest, RegisterNewUserCommand>();
             CreateMap<LoginRequest, LoginCommand>();
             CreateMap<LoginResult, LoginResponse>();
+            CreateMap<RefreshTokenResult, RefreshTokenResponse>();
         }
     }
 }
