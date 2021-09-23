@@ -21,13 +21,11 @@ namespace StudySharp.ApplicationServices.Commands.Auth
     public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, OperationResult<LoginResult>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IJwtService _jwtService;
 
-        public LoginCommandHandler(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IJwtService jwtAuthManager)
+        public LoginCommandHandler(UserManager<ApplicationUser> userManager, IJwtService jwtAuthManager)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _jwtService = jwtAuthManager;
         }
 
@@ -39,14 +37,14 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 return OperationResult.Fail<LoginResult>(ErrorConstants.InvalidCredentials);
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            var isSucceeded = await _userManager.CheckPasswordAsync(user, request.Password);
 
-            if (!result.Succeeded)
+            if (!isSucceeded)
             {
                 return OperationResult.Fail<LoginResult>(ErrorConstants.InvalidCredentials);
             }
 
-            var jwtResult = _jwtService.GenerateTokens(user.UserName, new Claim[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.Now);
+            var jwtResult = _jwtService.GenerateTokens(user.UserName, new[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.Now);
 
             return OperationResult.Ok(new LoginResult
             {

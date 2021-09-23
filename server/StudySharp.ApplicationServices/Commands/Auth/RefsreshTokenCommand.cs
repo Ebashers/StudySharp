@@ -46,7 +46,7 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 }
 
                 var jwtResult = _jwtService.Refresh(request.RefreshToken, request.AccessToken, DateTime.Now);
-                return OperationResult.Ok<RefreshTokenResult>(new RefreshTokenResult
+                return OperationResult.Ok(new RefreshTokenResult
                 {
                     UserName = user.UserName,
                     Role = "Test",

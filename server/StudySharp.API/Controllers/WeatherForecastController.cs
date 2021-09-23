@@ -36,13 +36,13 @@ namespace StudySharp.API.Controllers
         [HttpGet]
         public async Task<OperationResult<Tag>> Get([FromQuery] GetTagByIdQuery getTagByIdQuery)
         {
-            return await _mediator.Send<OperationResult<Tag>>(getTagByIdQuery);
+            return await _mediator.Send(getTagByIdQuery);
         }
 
         [HttpPost]
         public async Task<OperationResult> Add([FromBody] AddTagCommand addTagCommand)
         {
-            return await _mediator.Send<OperationResult>(addTagCommand);
+            return await _mediator.Send(addTagCommand);
         }
 
         [HttpPut]

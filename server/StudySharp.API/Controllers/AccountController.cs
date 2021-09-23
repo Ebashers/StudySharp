@@ -32,7 +32,7 @@ namespace StudySharp.API.Controllers
         {
             var registerNewUserCommand = _mapper.Map<RegisterNewUserCommand>(registerNewUserRequest);
 
-            return await _mediator.Send<OperationResult>(registerNewUserCommand);
+            return await _mediator.Send(registerNewUserCommand);
         }
 
         [AllowAnonymous]
@@ -41,7 +41,7 @@ namespace StudySharp.API.Controllers
         {
             var loginCommand = _mapper.Map<LoginCommand>(loginRequest);
 
-            var operationResult = await _mediator.Send<OperationResult<LoginResult>>(loginCommand);
+            var operationResult = await _mediator.Send(loginCommand);
 
             if (!operationResult.IsSucceeded)
             {
@@ -50,14 +50,14 @@ namespace StudySharp.API.Controllers
 
             var response = _mapper.Map<LoginResponse>(operationResult.Result);
 
-            return OperationResult.Ok<LoginResponse>(response);
+            return OperationResult.Ok(response);
         }
 
         [HttpPost("logout")]
         public async Task<OperationResult> Logout()
         {
             var userName = User.Identity.Name;
-            return await _mediator.Send<OperationResult>(new LogoutCommand { UserName = userName });
+            return await _mediator.Send(new LogoutCommand { UserName = userName });
         }
 
         [HttpPost("refresh-token")]
@@ -72,7 +72,7 @@ namespace StudySharp.API.Controllers
                 UserName = userName,
             };
 
-            var operationResult = await _mediator.Send<OperationResult<RefreshTokenResult>>(refreshTokenCommand);
+            var operationResult = await _mediator.Send(refreshTokenCommand);
 
             if (!operationResult.IsSucceeded)
             {
@@ -81,7 +81,7 @@ namespace StudySharp.API.Controllers
 
             var response = _mapper.Map<RefreshTokenResponse>(operationResult.Result);
 
-            return OperationResult.Ok<RefreshTokenResponse>(response);
+            return OperationResult.Ok(response);
         }
     }
 }
