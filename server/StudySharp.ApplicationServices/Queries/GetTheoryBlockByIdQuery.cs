@@ -13,6 +13,7 @@ namespace StudySharp.ApplicationServices.Queries
         public int Id { get; set; }
     }
 
+    // huita
     public sealed class GetTheoryBlockByIdQueryHandler : IRequestHandler<GetTheoryBlockByIdQuery, OperationResult<TheoryBlock>>
     {
         private readonly StudySharpDbContext _context;
