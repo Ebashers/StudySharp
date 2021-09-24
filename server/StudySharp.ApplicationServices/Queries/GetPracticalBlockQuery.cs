@@ -14,11 +14,11 @@ namespace StudySharp.ApplicationServices.Queries
     {
     }
 
-    public sealed class GetCoursesQueryHandler : IRequestHandler<GetPracticalBlockQuery, OperationResult<List<PracticalBlock>>>
+    public sealed class GetPracticalBlockQueryHandler : IRequestHandler<GetPracticalBlockQuery, OperationResult<List<PracticalBlock>>>
     {
         private readonly StudySharpDbContext _context;
 
-        public GetCoursesQueryHandler(StudySharpDbContext studySharpDbContext)
+        public GetPracticalBlockQueryHandler(StudySharpDbContext studySharpDbContext)
         {
             _context = studySharpDbContext;
         }
