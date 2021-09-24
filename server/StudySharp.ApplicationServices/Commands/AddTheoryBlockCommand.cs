@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
@@ -17,18 +15,18 @@ namespace StudySharp.ApplicationServices.Commands
         public int CourseId { get; set; }
     }
 
-    public sealed class AddTheoryBlockHandler : IRequestHandler<AddTheoryBlockCommand, OperationResult>
+    public sealed class AddTheoryBlockCommandHandler : IRequestHandler<AddTheoryBlockCommand, OperationResult>
     {
         private readonly StudySharpDbContext _context;
 
-        public AddTheoryBlockHandler(StudySharpDbContext sharpDbContext)
+        public AddTheoryBlockCommandHandler(StudySharpDbContext sharpDbContext)
         {
             _context = sharpDbContext;
         }
 
         public async Task<OperationResult> Handle(AddTheoryBlockCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.TheoryBlocks.AnyAsync(c => Equals(c.Name.ToLower()) && c.CourseId == request.CourseId, cancellationToken))
+            if (await _context.TheoryBlocks.AnyAsync(c => Equals(c.Name.ToLower(), request.Name.ToLower()) && c.CourseId == request.CourseId, cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Name));
             }
@@ -38,6 +36,7 @@ namespace StudySharp.ApplicationServices.Commands
             {
                 Name = request.Name, CourseId = request.CourseId,
             }, cancellationToken);
+
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }
