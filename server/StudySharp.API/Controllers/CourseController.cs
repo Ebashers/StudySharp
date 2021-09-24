@@ -26,14 +26,14 @@ namespace StudySharp.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<OperationResult> Add([FromBody] AddCourseRequest addCourseRequest)
         {
             var addCourseCommand = _mapper.Map<AddCourseCommand>(addCourseRequest);
             return await _mediator.Send(addCourseCommand);
         }
 
-        [HttpPost]
+        [HttpPost("remove")]
         public async Task<OperationResult> Remove([FromBody] RemoveCourseByIdRequest removeCourseByIdRequest)
         {
             var removeCourseByIdCommand = _mapper.Map<RemoveCourseByIdCommand>(removeCourseByIdRequest);
