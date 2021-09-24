@@ -24,7 +24,7 @@ namespace StudySharp.ApplicationServices.Queries
 
         public async Task<OperationResult<Tag>> Handle(GetTagByIdQuery request, CancellationToken cancellationToken)
         {
-            var tag = await _studySharpDbContext.Tags.FindAsync(request.Id);
+            var tag = await _studySharpDbContext.Tags.FindAsync(request.Id, cancellationToken);
             if (tag == null)
             {
                 return OperationResult.Fail<Tag>(string.Format(ErrorConstants.EntityNotFound, nameof(Tag), nameof(Tag.Id), request.Id));

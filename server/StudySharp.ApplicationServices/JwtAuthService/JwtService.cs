@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 
-namespace StudySharp.ApplicationServices.JwtService
+namespace StudySharp.ApplicationServices.JwtAuthService
 {
-    public interface IJwtAuthManager
+    public interface IJwtService
     {
         IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary { get; }
         JwtAuthResult GenerateTokens(string username, Claim[] claims, DateTime now);
@@ -21,14 +21,14 @@ namespace StudySharp.ApplicationServices.JwtService
         (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token);
     }
 
-    public class JwtAuthManager : IJwtAuthManager
+    public class JwtService : IJwtService
     {
         public IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary => _usersRefreshTokens.ToImmutableDictionary();
         private readonly ConcurrentDictionary<string, RefreshToken> _usersRefreshTokens;  // can store in a database or a distributed cache
         private readonly JwtTokenConfig _jwtTokenConfig;
         private readonly byte[] _secret;
 
-        public JwtAuthManager(JwtTokenConfig jwtTokenConfig)
+        public JwtService(JwtTokenConfig jwtTokenConfig)
         {
             _jwtTokenConfig = jwtTokenConfig;
             _usersRefreshTokens = new ConcurrentDictionary<string, RefreshToken>();

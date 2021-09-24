@@ -20,7 +20,7 @@ namespace StudySharp.DomainServices
                         configuration.GetConnectionString(ConnectionStrings.Default),
                         x => x.MigrationsAssembly(typeof(Startup).Assembly.GetName().FullName));
                 }, ServiceLifetime.Transient)
-                .AddIdentity<IdentityUser, IdentityRole>()
+                .AddIdentity<ApplicationUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<StudySharpDbContext>()
                 .AddDefaultTokenProviders();
 

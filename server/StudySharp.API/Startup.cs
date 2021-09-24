@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,11 +26,40 @@ namespace StudySharp.API
             services
                 .AddDomainServices(Configuration)
                 .AddApplicationServices(Configuration)
-                .AddEmailService(Configuration, "EmailConfig");
+                .AddEmailService(Configuration, "EmailConfig")
+                .AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudySharp.API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = @"Bearer",
+                            },
+                        },
+                        new string[] { }
+                    },
+                });
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
         }
 
@@ -46,6 +76,8 @@ namespace StudySharp.API
             app
                 .UseMiddleware<GlobalErrorHandler>()
                 .UseRouting()
+                .UseCors("AllowAll")
+                .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints =>
             {

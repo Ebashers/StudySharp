@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StudySharp.ApplicationServices.Commands;
@@ -11,8 +12,9 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.API.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -34,13 +36,13 @@ namespace StudySharp.API.Controllers
         [HttpGet]
         public async Task<OperationResult<Tag>> Get([FromQuery] GetTagByIdQuery getTagByIdQuery)
         {
-            return await _mediator.Send<OperationResult<Tag>>(getTagByIdQuery);
+            return await _mediator.Send(getTagByIdQuery);
         }
 
         [HttpPost]
         public async Task<OperationResult> Add([FromBody] AddTagCommand addTagCommand)
         {
-            return await _mediator.Send<OperationResult>(addTagCommand);
+            return await _mediator.Send(addTagCommand);
         }
 
         [HttpPut]
