@@ -26,7 +26,7 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddTheoryBlockCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.TheoryBlocks.AnyAsync(c => Equals(c.Name.ToLower(), request.Name.ToLower()) && c.CourseId == request.CourseId, cancellationToken))
+            if (await _context.TheoryBlocks.AnyAsync(_ => Equals(_.Name.ToLower(), request.Name.ToLower()) && _.CourseId == request.CourseId, cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Name));
             }
