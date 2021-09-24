@@ -40,7 +40,7 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(removeCourseByIdCommand);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<OperationResult> GetCourseById([FromBody] GetCourseByIdRequest getCourseByIdRequest)
         {
             var getCourseByIdQuery = _mapper.Map<GetCourseByIdQuery>(getCourseByIdRequest);
@@ -55,7 +55,7 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<OperationResult> GetCourses([FromBody] GetCoursesRequest getCoursesRequest)
         {
             var getCoursesQuery = _mapper.Map<GetCourseByIdQuery>(getCoursesRequest);
