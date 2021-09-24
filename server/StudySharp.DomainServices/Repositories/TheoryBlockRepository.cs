@@ -32,6 +32,7 @@ namespace StudySharp.DomainServices.Repositories
             {
                 return BuildErrorResponse("Could not find TheoryBlock`s Id");
             }
+
             return new OperationResult<TheoryBlock> { Result = theoryBlock, IsSucceeded = true };
         }
 
@@ -47,6 +48,7 @@ namespace StudySharp.DomainServices.Repositories
             {
                 return BuildErrorResponse("There`s no TheoryBlock you can modify");
             }
+
             _context.Entry(theoryBlock).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return new OperationResult<TheoryBlock> { Result = theoryBlock, IsSucceeded = true };
@@ -59,11 +61,12 @@ namespace StudySharp.DomainServices.Repositories
             {
                 return BuildErrorResponse("Could not find TheoryBlock`s Id");
             }
+
             _context.TheoryBlocks.Remove(theoryBlock);
             await _context.SaveChangesAsync();
             return new OperationResult<TheoryBlock> { Result = theoryBlock, IsSucceeded = true };
         }
-        
+
         private OperationResult<TheoryBlock> BuildErrorResponse(string errorText)
         {
             var result = new OperationResult<TheoryBlock> { Result = null, IsSucceeded = false };
