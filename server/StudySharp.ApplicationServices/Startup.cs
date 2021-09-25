@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using StudySharp.ApplicationServices.EmailService;
 using StudySharp.ApplicationServices.Infrastructure.EmailService;
 using StudySharp.ApplicationServices.JwtAuthService;
+using IValidationRule = StudySharp.Domain.Validators.IValidationRule;
 
 namespace StudySharp.ApplicationServices
 {
@@ -18,6 +19,15 @@ namespace StudySharp.ApplicationServices
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.Scan(scanner =>
+            {
+                scanner
+                    .FromAssemblyOf<Marker>()
+                    .AddClasses(classes => classes.AssignableTo(typeof(IValidationRule)))
+                    .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+                    .AsMatchingInterface()
+                    .WithScopedLifetime();
+            });
             var jwtTokenConfig = configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
             services.AddAuthentication(x =>
@@ -43,7 +53,6 @@ namespace StudySharp.ApplicationServices
             services.AddSingleton<IJwtService, JwtService>();
             services.AddHostedService<JwtRefreshTokenCache>();
             services.AddMediatR(Assembly.GetExecutingAssembly());
-
             return services;
         }
 
@@ -53,6 +62,10 @@ namespace StudySharp.ApplicationServices
             services.AddScoped<IEmailService, MailKitEmailService>();
 
             return services;
+        }
+
+        private class Marker
+        {
         }
     }
 }

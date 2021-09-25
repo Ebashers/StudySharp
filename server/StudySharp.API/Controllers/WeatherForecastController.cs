@@ -40,6 +40,7 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<OperationResult> Add([FromBody] AddTagCommand addTagCommand)
         {
             return await _mediator.Send(addTagCommand);
