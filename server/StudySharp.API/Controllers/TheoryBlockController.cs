@@ -4,7 +4,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.TheoryBlocks;
+using StudySharp.API.Responses.TheoryBlocks;
 using StudySharp.ApplicationServices.Commands;
+using StudySharp.ApplicationServices.Queries;
 using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
@@ -36,6 +38,21 @@ namespace StudySharp.API.Controllers
         {
             var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
             return await _mediator.Send(removeTheoryBlockByIdCommand);
+        }
+
+        [HttpGet]
+        public async Task<OperationResult> GetTheoryBlockById([FromBody] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
+        {
+            var getTheoryBlockByIdQuery = _mapper.Map<GetTheoryBlockByIdQuery>(getTheoryBlockByIdRequest);
+            var operationResult = await _mediator.Send(getTheoryBlockByIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetTheoryBlockByIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
         }
     }
 }
