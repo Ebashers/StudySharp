@@ -12,6 +12,7 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class AddTheoryBlockCommand : IRequest<OperationResult>
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public int CourseId { get; set; }
     }
 
@@ -26,16 +27,20 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddTheoryBlockCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.TheoryBlocks.AnyAsync(_ => Equals(_.Name.ToLower(), request.Name.ToLower()) && _.CourseId == request.CourseId, cancellationToken))
+            if (await _context.TheoryBlocks.AnyAsync(
+                _ => _.Name.ToLower().Equals(request.Name.ToLower()) && _.CourseId == request.CourseId,
+                cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Name));
             }
 
             await _context.TheoryBlocks.AddAsync(
                 new TheoryBlock
-            {
-                Name = request.Name, CourseId = request.CourseId,
-            }, cancellationToken);
+                {
+                    Name = request.Name,
+                    CourseId = request.CourseId,
+                    Description = request.Description,
+                }, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
