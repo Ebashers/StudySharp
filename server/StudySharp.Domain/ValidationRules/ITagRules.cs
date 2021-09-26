@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace StudySharp.Domain.Validators
+namespace StudySharp.Domain.ValidationRules
 {
     public interface ITagRules : IValidationRule
     {

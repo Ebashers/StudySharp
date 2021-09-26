@@ -19,12 +19,12 @@ namespace StudySharp.ApplicationServices.Commands.Auth
         public string RefreshToken { get; set; }
     }
 
-    public sealed class RefsreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, OperationResult<RefreshTokenResult>>
+    public sealed class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, OperationResult<RefreshTokenResult>>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtService _jwtService;
 
-        public RefsreshTokenCommandHandler(IJwtService jwtAuthManager, UserManager<ApplicationUser> userManager)
+        public RefreshTokenCommandHandler(IJwtService jwtAuthManager, UserManager<ApplicationUser> userManager)
         {
             _jwtService = jwtAuthManager;
             _userManager = userManager;

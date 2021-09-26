@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using StudySharp.ApplicationServices.EmailService;
 using StudySharp.ApplicationServices.Infrastructure.EmailService;
 using StudySharp.ApplicationServices.JwtAuthService;
-using IValidationRule = StudySharp.Domain.Validators.IValidationRule;
+using IValidationRule = StudySharp.Domain.ValidationRules.IValidationRule;
 
 namespace StudySharp.ApplicationServices
 {
