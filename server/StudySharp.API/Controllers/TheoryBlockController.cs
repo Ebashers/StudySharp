@@ -13,7 +13,7 @@ namespace StudySharp.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/theory-blocks")]
 
     public class TheoryBlockController : ControllerBase
     {
@@ -26,33 +26,33 @@ namespace StudySharp.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public async Task<OperationResult> Add([FromBody] AddTheoryBlockRequest addTheoryBlockRequest)
         {
             var addTheoryBlockCommand = _mapper.Map<AddTheoryBlockCommand>(addTheoryBlockRequest);
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
-        [HttpPost("remove")]
-        public async Task<OperationResult> Remove([FromBody] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
+        [HttpDelete("{id:int}")]
+        public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
         {
             var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
             return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
 
-        [HttpGet]
-        public async Task<OperationResult> GetTheoryBlockById([FromBody] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
+        [HttpGet("{id:int}")]
+        public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
             var getTheoryBlockByIdQuery = _mapper.Map<GetTheoryBlockByIdQuery>(getTheoryBlockByIdRequest);
             var operationResult = await _mediator.Send(getTheoryBlockByIdQuery);
 
             if (!operationResult.IsSucceeded)
             {
-                return OperationResult.Fail<GetTheoryBlockByIdResponse>(operationResult.Errors);
+                return OperationResult<GetTheoryBlockByIdResponse>.Fail<GetTheoryBlockByIdResponse>(operationResult.Errors);
             }
 
             var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
-            return OperationResult.Ok(response);
+            return OperationResult<GetTheoryBlockByIdResponse>.Ok(response);
         }
     }
 }
