@@ -20,7 +20,7 @@ namespace StudySharp.API.Helpers
 
                 context.Result = new JsonResult(responseObj)
                 {
-                    StatusCode = 402,
+                    StatusCode = 400,
                 };
             }
         }

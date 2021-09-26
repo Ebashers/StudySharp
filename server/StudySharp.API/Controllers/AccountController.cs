@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.Auth;
 using StudySharp.API.Responses.Auth;
 using StudySharp.ApplicationServices.Commands.Auth;
-using StudySharp.ApplicationServices.JwtAuthService.ResultModels;
 using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
