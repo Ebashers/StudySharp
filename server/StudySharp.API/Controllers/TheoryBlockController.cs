@@ -48,11 +48,11 @@ namespace StudySharp.API.Controllers
 
             if (!operationResult.IsSucceeded)
             {
-                return OperationResult<GetTheoryBlockByIdResponse>.Fail<GetTheoryBlockByIdResponse>(operationResult.Errors);
+                return OperationResult.Fail<GetTheoryBlockByIdResponse>(operationResult.Errors);
             }
 
             var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
-            return OperationResult<GetTheoryBlockByIdResponse>.Ok(response);
+            return OperationResult.Ok(response);
         }
     }
 }
