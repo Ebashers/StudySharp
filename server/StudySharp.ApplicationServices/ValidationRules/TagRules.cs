@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using StudySharp.Domain.Validators;
+using StudySharp.Domain.ValidationRules;
 using StudySharp.DomainServices;
 
 namespace StudySharp.ApplicationServices.ValidationRules
