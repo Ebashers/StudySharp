@@ -53,6 +53,21 @@ namespace StudySharp.API.Controllers
 
             var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
             return OperationResult.Ok(response);
-        }
+        }/*
+
+        [HttpGet("{courseId:int}")]
+        public async Task<OperationResult<GetTheoryBlockByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlockByCourseIdRequest getTheoryBlockByCourseIdRequest)
+        {
+            var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlockByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
+            var operationResult = await _mediator.Send(getTheoryBlockByCourseIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetTheoryBlockByCourseIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetTheoryBlockByCourseIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }*/
     }
 }
