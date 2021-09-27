@@ -25,13 +25,13 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddPracticalBlockCommand request, CancellationToken cancellationToken)
         {
-            if (await _studySharpDbContext.PracticalBlocks.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower())))
+            if (await _studySharpDbContext.PracticalBlocks.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower()), cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(PracticalBlock), nameof(PracticalBlock.Name), request.Name));
             }
 
             await _studySharpDbContext.PracticalBlocks.AddAsync(new PracticalBlock { Name = request.Name });
-            await _studySharpDbContext.SaveChangesAsync();
+            await _studySharpDbContext.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }
     }
