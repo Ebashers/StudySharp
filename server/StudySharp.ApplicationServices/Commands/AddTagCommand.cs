@@ -12,6 +12,7 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class AddTagCommand : IRequest<OperationResult>
     {
         public string Name { get; set; }
+        public int? Id { get; set; }
     }
 
     public sealed class AddTagCommandHandler : IRequestHandler<AddTagCommand, OperationResult>
