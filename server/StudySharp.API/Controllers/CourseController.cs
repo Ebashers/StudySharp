@@ -13,7 +13,7 @@ namespace StudySharp.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[courses]")]
 
     public class CourseController : ControllerBase
     {
@@ -26,22 +26,22 @@ namespace StudySharp.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public async Task<OperationResult> Add([FromBody] AddCourseRequest addCourseRequest)
         {
             var addCourseCommand = _mapper.Map<AddCourseCommand>(addCourseRequest);
             return await _mediator.Send(addCourseCommand);
         }
 
-        [HttpPost("remove")]
-        public async Task<OperationResult> Remove([FromBody] RemoveCourseByIdRequest removeCourseByIdRequest)
+        [HttpDelete("{id:int}")]
+        public async Task<OperationResult> Remove([FromRoute] RemoveCourseByIdRequest removeCourseByIdRequest)
         {
             var removeCourseByIdCommand = _mapper.Map<RemoveCourseByIdCommand>(removeCourseByIdRequest);
             return await _mediator.Send(removeCourseByIdCommand);
         }
 
-        [HttpGet]
-        public async Task<OperationResult> GetCourseById([FromBody] GetCourseByIdRequest getCourseByIdRequest)
+        [HttpGet("{id:int}")]
+        public async Task<OperationResult> GetCourseById([FromRoute] GetCourseByIdRequest getCourseByIdRequest)
         {
             var getCourseByIdQuery = _mapper.Map<GetCourseByIdQuery>(getCourseByIdRequest);
             var operationResult = await _mediator.Send(getCourseByIdQuery);
