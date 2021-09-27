@@ -58,7 +58,7 @@ namespace StudySharp.API.Controllers
         [HttpGet]
         public async Task<OperationResult> GetCourses([FromBody] GetCoursesRequest getCoursesRequest)
         {
-            var getCoursesQuery = _mapper.Map<GetCourseByIdQuery>(getCoursesRequest);
+            var getCoursesQuery = _mapper.Map<GetCoursesQuery>(getCoursesRequest);
             var operationResult = await _mediator.Send(getCoursesQuery);
 
             if (!operationResult.IsSucceeded)
