@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using StudySharp.ApplicationServices.JwtAuthService;
 using StudySharp.ApplicationServices.JwtAuthService.ResultModels;
+using StudySharp.ApplicationServices.ValidationRules.Auth;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.DomainServices;
@@ -17,6 +19,26 @@ namespace StudySharp.ApplicationServices.Commands.Auth
         public string UserName { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+    }
+
+    public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
+    {
+        public RefreshTokenCommandValidator(IRefreshTokenRules rules)
+        {
+            RuleFor(_ => _.UserName)
+                .NotEmpty()
+                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(ApplicationUser.Email)))
+                .MustAsync(rules.UserIsRegistered)
+                .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, "User", nameof(ApplicationUser.Email), _.UserName));
+
+            RuleFor(_ => _.AccessToken)
+                .NotEmpty()
+                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(RefreshTokenCommand.AccessToken)));
+
+            RuleFor(_ => _.RefreshToken)
+                .NotEmpty()
+                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(RefreshTokenCommand.RefreshToken)));
+        }
     }
 
     public sealed class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, OperationResult<RefreshTokenResult>>
@@ -35,15 +57,6 @@ namespace StudySharp.ApplicationServices.Commands.Auth
             try
             {
                 var user = await _userManager.FindByNameAsync(request.UserName);
-                if (user == null)
-                {
-                    return OperationResult.Fail<RefreshTokenResult>(string.Format(ErrorConstants.EntityNotFound, "User", "Email", request.UserName));
-                }
-
-                if (string.IsNullOrEmpty(request.RefreshToken))
-                {
-                    return OperationResult.Fail<RefreshTokenResult>(ErrorConstants.InvalidToken);
-                }
 
                 var jwtResult = _jwtService.Refresh(request.RefreshToken, request.AccessToken, DateTime.Now);
                 return OperationResult.Ok(new RefreshTokenResult
