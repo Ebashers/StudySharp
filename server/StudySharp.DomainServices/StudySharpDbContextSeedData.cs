@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,70 +7,53 @@ using StudySharp.Domain.Enums;
 
 namespace StudySharp.DomainServices
 {
-    public class StudySharpDbContextSeedData
+    public static class StudySharpDbContextSeedData
     {
-         public static async Task Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
+        private const string AdminCredentialsSection = "AdminCredentialsSection";
+        private const string AdminUserName = "UserName";
+        private const string AdminPassword = "Password";
+
+        public static void Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            using (var scope = serviceProvider.CreateScope())
+            using var scope = serviceProvider.CreateScope();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            GenerateAndSeedRoles(roleManager);
+            GenerateAndSeedAdmin(userManager, configuration);
+        }
+
+        private static async void GenerateAndSeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            if (await roleManager.Roles.AnyAsync())
             {
-                var context = scope.ServiceProvider.GetService<StudySharpDbContext>();
-                var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-                var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-                if (!await context.Roles.AnyAsync())
-                {
-                    GenerateAndSeedRoles(roleManager);
-                }
+                return;
+            }
 
-                var email = configuration.GetValue<string>("AdminUserEmail");
-                var password = configuration.GetValue<string>("AdminUserPswd");
-
-                var user = new ApplicationUser
-                {
-                    Email = email.ToLower(),
-                    UserName = email.ToLower(),
-                };
-
-                if (!context.Users.Any(u => u.NormalizedUserName == email.ToUpper()))
-                {
-                    var res = await userManager.CreateAsync(user, password);
-                    if (res.Succeeded)
-                    {
-                        var adminRole = new IdentityRole("Admin");
-                        if (!context.Roles.Any(e => e.NormalizedName == adminRole.Name.ToUpper()))
-                        {
-                            var res1 = await roleManager.CreateAsync(adminRole);
-                            if (res1.Succeeded)
-                            {
-                                var adminUser = context.Users.Find(user.Id);
-                                await userManager.AddToRoleAsync(adminUser, adminRole.Name);
-                            }
-                        }
-
-                        try
-                        {
-                            context.Users.Add(new ApplicationUser { Email = user.Email, UserName = user.UserName });
-                            await context.SaveChangesAsync();
-                        }
-                        catch (Exception)
-                        {
-                            throw new ApplicationException();
-                        }
-                    }
-                }
+            foreach (var roleName in Enum.GetNames<DomainRoles>())
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
             }
         }
 
-         private static async void GenerateAndSeedRoles(RoleManager<IdentityRole> roleManager)
-         {
-             if (roleManager.Roles.Any())
-             {
-                 return;
-             }
+        private static async void GenerateAndSeedAdmin(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        {
+            var userName = configuration.GetSection(AdminCredentialsSection).GetValue<string>(AdminUserName);
+            var password = configuration.GetSection(AdminCredentialsSection).GetValue<string>(AdminPassword);
 
-             foreach (var name in Enum.GetNames<DomainRoles>())
-             {
-                 await roleManager.CreateAsync(new IdentityRole(name));
-             }
-         }
+            if (await userManager.Users.AnyAsync(_ => _.NormalizedUserName.Equals(userName.ToUpper())))
+            {
+                return;
+            }
+
+            var admin = new ApplicationUser
+            {
+                Email = userName,
+                UserName = userName,
+            };
+
+            await userManager.CreateAsync(admin, password);
+        }
     }
 }

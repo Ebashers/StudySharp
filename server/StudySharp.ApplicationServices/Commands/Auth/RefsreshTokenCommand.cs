@@ -24,9 +24,9 @@ namespace StudySharp.ApplicationServices.Commands.Auth
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtService _jwtService;
 
-        public RefreshTokenCommandHandler(IJwtService jwtAuthManager, UserManager<ApplicationUser> userManager)
+        public RefreshTokenCommandHandler(IJwtService jwtService, UserManager<ApplicationUser> userManager)
         {
-            _jwtService = jwtAuthManager;
+            _jwtService = jwtService;
             _userManager = userManager;
         }
 

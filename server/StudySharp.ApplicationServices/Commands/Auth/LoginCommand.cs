@@ -41,10 +41,10 @@ namespace StudySharp.ApplicationServices.Commands.Auth
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtService _jwtService;
 
-        public LoginCommandHandler(UserManager<ApplicationUser> userManager, IJwtService jwtAuthManager)
+        public LoginCommandHandler(UserManager<ApplicationUser> userManager, IJwtService jwtService)
         {
             _userManager = userManager;
-            _jwtService = jwtAuthManager;
+            _jwtService = jwtService;
         }
 
         public async Task<OperationResult<LoginResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
