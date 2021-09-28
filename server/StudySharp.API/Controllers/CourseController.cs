@@ -13,7 +13,7 @@ namespace StudySharp.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[courses]")]
+    [Route("api/courses")]
 
     public class CourseController : ControllerBase
     {
@@ -41,7 +41,7 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<OperationResult> GetCourseById([FromRoute] GetCourseByIdRequest getCourseByIdRequest)
+        public async Task<OperationResult<GetCourseByIdResponse>> GetCourseById([FromRoute] GetCourseByIdRequest getCourseByIdRequest)
         {
             var getCourseByIdQuery = _mapper.Map<GetCourseByIdQuery>(getCourseByIdRequest);
             var operationResult = await _mediator.Send(getCourseByIdQuery);
@@ -56,7 +56,7 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<OperationResult> GetCourses([FromBody] GetCoursesRequest getCoursesRequest)
+        public async Task<OperationResult<GetCoursesResponse>> GetCourses([FromBody] GetCoursesRequest getCoursesRequest)
         {
             var getCoursesQuery = _mapper.Map<GetCoursesQuery>(getCoursesRequest);
             var operationResult = await _mediator.Send(getCoursesQuery);
