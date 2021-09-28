@@ -8,16 +8,16 @@ using StudySharp.DomainServices;
 
 namespace StudySharp.ApplicationServices.Commands
 {
-    public sealed class RemovePracticalBlockCommand : IRequest<OperationResult>
+    public sealed class RemovePracticalBlockByIdCommand : IRequest<OperationResult>
     {
         public int Id { get; set; }
     }
 
-    public sealed class RemovePracticalBlockCommandHandler : IRequestHandler<RemovePracticalBlockCommand, OperationResult>
+    public sealed class RemovePracticalBlockCommandHandler : IRequestHandler<RemovePracticalBlockByIdCommand, OperationResult>
     {
         private readonly StudySharpDbContext _studySharpDbContext;
 
-        public async Task<OperationResult> Handle(RemovePracticalBlockCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult> Handle(RemovePracticalBlockByIdCommand request, CancellationToken cancellationToken)
         {
             var practicalBlock = await _studySharpDbContext.PracticalBlocks.FindAsync(request.Id, cancellationToken);
             if (practicalBlock == null)

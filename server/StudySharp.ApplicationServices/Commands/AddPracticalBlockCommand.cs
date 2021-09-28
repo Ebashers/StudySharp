@@ -30,7 +30,7 @@ namespace StudySharp.ApplicationServices.Commands
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(PracticalBlock), nameof(PracticalBlock.Name), request.Name));
             }
 
-            await _studySharpDbContext.PracticalBlocks.AddAsync(new PracticalBlock { Name = request.Name });
+            await _studySharpDbContext.PracticalBlocks.AddAsync(new PracticalBlock { Name = request.Name }, cancellationToken);
             await _studySharpDbContext.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }
