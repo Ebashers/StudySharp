@@ -53,8 +53,24 @@ namespace StudySharp.API.Controllers
 
             var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
             return OperationResult.Ok(response);
-        }/*
+        }
 
+        [HttpPut("{id:int}")]
+        public async Task<OperationResult<UpdateTheoryBlockResponce>> Update([FromRoute] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
+        {
+            var updateTheoryBlockCommand = _mapper.Map<UpdateTheoryBlockCommand>(updateTheoryBlockByIdRequest);
+            var operationResult = await _mediator.Send(updateTheoryBlockCommand);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<UpdateTheoryBlockResponce>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<UpdateTheoryBlockResponce>(operationResult);
+            return OperationResult.Ok(response);
+        }
+
+        /*
         [HttpGet("{courseId:int}")]
         public async Task<OperationResult<GetTheoryBlockByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlockByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {

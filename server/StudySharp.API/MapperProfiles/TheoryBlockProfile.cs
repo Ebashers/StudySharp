@@ -12,6 +12,7 @@ namespace StudySharp.API.MapperProfiles
             CreateMap<AddTheoryBlockRequest, AddTheoryBlockCommand>();
             CreateMap<RemoveTheoryBlockByIdRequest, RemoveTheoryBlockByIdCommand>();
             CreateMap<GetTheoryBlockByIdRequest, GetTheoryBlockByIdQuery>();
+            CreateMap<UpdateTheoryBlockByIdRequest, UpdateTheoryBlockCommand>();
         }
     }
 }
