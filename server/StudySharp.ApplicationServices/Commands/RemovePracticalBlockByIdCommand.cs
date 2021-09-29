@@ -13,7 +13,7 @@ namespace StudySharp.ApplicationServices.Commands
         public int Id { get; set; }
     }
 
-    public sealed class RemovePracticalBlockCommandHandler : IRequestHandler<RemovePracticalBlockByIdCommand, OperationResult>
+    public sealed class RemovePracticalBlockByIdCommandHandler : IRequestHandler<RemovePracticalBlockByIdCommand, OperationResult>
     {
         private readonly StudySharpDbContext _studySharpDbContext;
 
