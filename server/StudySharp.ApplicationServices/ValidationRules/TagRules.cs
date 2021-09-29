@@ -18,5 +18,10 @@ namespace StudySharp.ApplicationServices.ValidationRules
         {
             return !await _context.Tags.AnyAsync(_ => _.Name == name);
         }
+
+        public async Task<bool> IsTagIdExistAsync(int id)
+        {
+            return await _context.Tags.FindAsync(id) != null;
+        }
     }
 }
