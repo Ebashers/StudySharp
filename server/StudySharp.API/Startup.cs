@@ -95,6 +95,8 @@ namespace StudySharp.API
                 endpoints.MapControllers();
             })
                 .EnsureDbMigrated<StudySharpDbContext>();
+
+            StudySharpDbContextSeedData.InitializeAsync(app.ApplicationServices, Configuration);
         }
     }
 }

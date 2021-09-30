@@ -4,6 +4,8 @@ namespace StudySharp.ApplicationServices.JwtAuthService
 {
     public sealed class JwtTokenConfig
     {
+        public const string JwtTokenConfigSection = "jwtTokenConfig";
+
         [JsonPropertyName("secret")]
         public string Secret { get; set; }
 

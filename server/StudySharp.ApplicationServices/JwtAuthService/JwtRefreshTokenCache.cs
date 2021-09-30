@@ -31,13 +31,13 @@ namespace StudySharp.ApplicationServices.JwtAuthService
 
         public Task StopAsync(CancellationToken stoppingToken)
         {
-            _timer?.Change(Timeout.Infinite, 0);
+            _timer.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            _timer.Dispose();
             GC.SuppressFinalize(this);
         }
     }

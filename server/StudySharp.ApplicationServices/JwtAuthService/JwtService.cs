@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace StudySharp.ApplicationServices.JwtAuthService
@@ -28,11 +29,11 @@ namespace StudySharp.ApplicationServices.JwtAuthService
         private readonly JwtTokenConfig _jwtTokenConfig;
         private readonly byte[] _secret;
 
-        public JwtService(JwtTokenConfig jwtTokenConfig)
+        public JwtService(IOptions<JwtTokenConfig> jwtTokenConfigOptions)
         {
-            _jwtTokenConfig = jwtTokenConfig;
+            _jwtTokenConfig = jwtTokenConfigOptions.Value;
             _usersRefreshTokens = new ConcurrentDictionary<string, RefreshToken>();
-            _secret = Encoding.ASCII.GetBytes(jwtTokenConfig.Secret);
+            _secret = Encoding.ASCII.GetBytes(jwtTokenConfigOptions.Value.Secret);
         }
 
         // optional: clean up expired refresh tokens
@@ -122,7 +123,7 @@ namespace StudySharp.ApplicationServices.JwtAuthService
                         ValidAudience = _jwtTokenConfig.Audience,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1),
+                        ClockSkew = TimeSpan.Zero,
                     },
                     out var validatedToken);
             return (principal, validatedToken as JwtSecurityToken);
