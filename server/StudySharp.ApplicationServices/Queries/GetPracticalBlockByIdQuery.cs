@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
