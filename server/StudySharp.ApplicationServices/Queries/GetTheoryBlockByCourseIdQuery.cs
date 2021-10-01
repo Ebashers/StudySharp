@@ -27,7 +27,7 @@ namespace StudySharp.ApplicationServices.Queries
             var theoryBlock = await _context.TheoryBlocks.FindAsync(request.CourseId, cancellationToken);
             if (theoryBlock == null)
             {
-                return OperationResult.Fail<TheoryBlock>(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Id), request.CourseId));
+                return OperationResult.Fail<TheoryBlock>(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.TheoryBlocks), request.CourseId));
             }
 
             return OperationResult.Ok(theoryBlock);
