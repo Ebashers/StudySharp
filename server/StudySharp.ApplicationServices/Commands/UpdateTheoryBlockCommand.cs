@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
@@ -11,6 +12,7 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class UpdateTheoryBlockCommand : IRequest<OperationResult>
     {
         public int Id { get; set; }
+        public int CourseId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }
@@ -26,11 +28,11 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(UpdateTheoryBlockCommand request, CancellationToken cancellationToken)
         {
-            var theoryBlock = await _context.TheoryBlocks.FindAsync(request.Id, cancellationToken);
+            var theoryBlock = await _context.TheoryBlocks.FirstOrDefaultAsync(_ => _.Id == request.Id && _.CourseId == request.CourseId, cancellationToken);
 
             if (theoryBlock == null)
             {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Id));
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Name), nameof(TheoryBlock.CourseId), request.Id, request.CourseId));
             }
 
             theoryBlock.Name = request.Name;

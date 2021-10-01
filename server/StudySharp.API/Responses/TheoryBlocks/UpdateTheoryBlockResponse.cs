@@ -1,6 +1,6 @@
 namespace StudySharp.API.Responses.TheoryBlocks
 {
-    public class UpdateTheoryBlockResponce
+    public class UpdateTheoryBlockResponse
     {
     }
 }

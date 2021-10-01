@@ -6,5 +6,6 @@ namespace StudySharp.API.Requests.TheoryBlocks
     {
         [BindProperty(Name = "id", SupportsGet = true)]
         public int Id { get; set; }
+        public int CourseId { get; set; }
     }
 }

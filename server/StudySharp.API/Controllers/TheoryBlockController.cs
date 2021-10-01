@@ -11,7 +11,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -26,21 +26,21 @@ namespace StudySharp.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("{courseId:int}/theory-blocks")]
         public async Task<OperationResult> Add([FromBody] AddTheoryBlockRequest addTheoryBlockRequest)
         {
             var addTheoryBlockCommand = _mapper.Map<AddTheoryBlockCommand>(addTheoryBlockRequest);
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{courseId:int}/theory-blocks/{theoryBlockId:int}")]
         public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
         {
             var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
             return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{courseId:int}/theory-blocks/{theoryBlockId:int}")]
         public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
             var getTheoryBlockByIdQuery = _mapper.Map<GetTheoryBlockByIdQuery>(getTheoryBlockByIdRequest);
@@ -55,33 +55,33 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<OperationResult<UpdateTheoryBlockResponce>> Update([FromRoute] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
+        [HttpPut("{courseId:int}/theory-blocks/{theoryBlockId:int}")]
+        public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromRoute] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
         {
             var updateTheoryBlockCommand = _mapper.Map<UpdateTheoryBlockCommand>(updateTheoryBlockByIdRequest);
             var operationResult = await _mediator.Send(updateTheoryBlockCommand);
 
             if (!operationResult.IsSucceeded)
             {
-                return OperationResult.Fail<UpdateTheoryBlockResponce>(operationResult.Errors);
+                return OperationResult.Fail<UpdateTheoryBlockResponse>(operationResult.Errors);
             }
 
-            var response = _mapper.Map<UpdateTheoryBlockResponce>(operationResult);
+            var response = _mapper.Map<UpdateTheoryBlockResponse>(operationResult);
             return OperationResult.Ok(response);
         }
 
-        [HttpGet("course/{courseId:int}")]
-        public async Task<OperationResult<GetTheoryBlockByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlockByCourseIdRequest getTheoryBlockByCourseIdRequest)
+        [HttpGet("{courseId:int}/theory-blocks")]
+        public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {
             var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlockByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
             var operationResult = await _mediator.Send(getTheoryBlockByCourseIdQuery);
 
             if (!operationResult.IsSucceeded)
             {
-                return OperationResult.Fail<GetTheoryBlockByCourseIdResponse>(operationResult.Errors);
+                return OperationResult.Fail<GetTheoryBlocksByCourseIdResponse>(operationResult.Errors);
             }
 
-            var response = _mapper.Map<GetTheoryBlockByCourseIdResponse>(operationResult.Result);
+            var response = _mapper.Map<GetTheoryBlocksByCourseIdResponse>(operationResult.Result);
             return OperationResult.Ok(response);
         }
     }
