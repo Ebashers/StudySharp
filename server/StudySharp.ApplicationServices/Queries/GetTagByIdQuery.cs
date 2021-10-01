@@ -20,9 +20,7 @@ namespace StudySharp.ApplicationServices.Queries
         public GetTagByIdQueryValidator(ITagRules rules)
         {
             RuleFor(_ => _.Id)
-                .NotEmpty()
-                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Tag.Id)))
-                .MustAsync((_, token) => rules.IsTagIdExistAsync(_))
+                .MustAsync((_, token) => rules.IsTagIdExistAsync(_, token))
                 .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Tag), nameof(Tag.Id), _.Id));
         }
     }

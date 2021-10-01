@@ -20,18 +20,16 @@ namespace StudySharp.ApplicationServices.Commands
         public RemoveTagByIdCommandValidator(ITagRules rules)
         {
             RuleFor(_ => _.Id)
-                .NotEmpty()
-                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Tag.Id)))
-                .MustAsync((_, token) => rules.IsTagIdExistAsync(_))
+                .MustAsync((_, token) => rules.IsTagIdExistAsync(_, token))
                 .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Tag), nameof(Tag.Id), _.Id));
         }
     }
 
-    public sealed class RemoveTagCommandHandler : IRequestHandler<RemoveTagByIdCommand, OperationResult>
+    public sealed class RemoveTagByIdCommandHandler : IRequestHandler<RemoveTagByIdCommand, OperationResult>
     {
         private readonly StudySharpDbContext _studySharpDbContext;
 
-        public RemoveTagCommandHandler(StudySharpDbContext studySharpDbContext)
+        public RemoveTagByIdCommandHandler(StudySharpDbContext studySharpDbContext)
         {
             _studySharpDbContext = studySharpDbContext;
         }
