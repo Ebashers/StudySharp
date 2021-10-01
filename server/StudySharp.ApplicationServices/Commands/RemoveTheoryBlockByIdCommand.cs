@@ -26,11 +26,11 @@ namespace StudySharp.ApplicationServices.Commands
             RemoveTheoryBlockByIdCommand request,
             CancellationToken cancellationToken)
         {
-            var theoryBlock = await _context.TheoryBlocks.FindAsync(request.Id, cancellationToken);
+            var theoryBlock = await _context.TheoryBlocks.FindAsync(request.Id);
 
             if (theoryBlock == null)
             {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Id));
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Id), request.Id));
             }
 
             _context.TheoryBlocks.Remove(theoryBlock);

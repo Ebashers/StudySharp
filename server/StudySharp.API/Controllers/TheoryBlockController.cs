@@ -11,9 +11,9 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
-    [Route("api/theory-blocks")]
+    [Route("api/courses")]
 
     public class TheoryBlockController : ControllerBase
     {
@@ -70,7 +70,7 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [HttpGet("{courseId:int}")]
+        [HttpGet("course/{courseId:int}")]
         public async Task<OperationResult<GetTheoryBlockByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlockByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {
             var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlockByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
