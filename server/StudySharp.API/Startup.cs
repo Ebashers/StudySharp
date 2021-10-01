@@ -1,12 +1,16 @@
 using System.Reflection;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using StudySharp.API.Helpers;
 using StudySharp.API.Middlewares;
 using StudySharp.ApplicationServices;
+using StudySharp.ApplicationServices.Queries;
 using StudySharp.DomainServices;
 
 namespace StudySharp.API
@@ -20,7 +24,6 @@ namespace StudySharp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services
@@ -28,7 +31,15 @@ namespace StudySharp.API
                 .AddApplicationServices(Configuration)
                 .AddEmailService(Configuration, "EmailConfig")
                 .AddAutoMapper(Assembly.GetExecutingAssembly());
-            services.AddControllers();
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(typeof(ValidateModelStateAttribute));
+                })
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCoursesQuery>());
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudySharp.API", Version = "v1" });
@@ -84,6 +95,8 @@ namespace StudySharp.API
                 endpoints.MapControllers();
             })
                 .EnsureDbMigrated<StudySharpDbContext>();
+
+            StudySharpDbContextSeedData.InitializeAsync(app.ApplicationServices, Configuration);
         }
     }
 }

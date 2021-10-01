@@ -7,14 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.Auth;
 using StudySharp.API.Responses.Auth;
 using StudySharp.ApplicationServices.Commands.Auth;
-using StudySharp.ApplicationServices.JwtAuthService.ResultModels;
 using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/account")]
     public class AccountController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -64,7 +63,7 @@ namespace StudySharp.API.Controllers
         public async Task<OperationResult<RefreshTokenResponse>> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
             var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
-            var userName = User.Identity.Name;
+            var userName = User.Identity?.Name;
             var refreshTokenCommand = new RefreshTokenCommand
             {
                 AccessToken = accessToken,

@@ -1,10 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
+using StudySharp.Domain.ValidationRules;
 using StudySharp.DomainServices;
 
 namespace StudySharp.ApplicationServices.Commands
@@ -12,6 +13,18 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class AddTagCommand : IRequest<OperationResult>
     {
         public string Name { get; set; }
+    }
+
+    public class AddTagCommandValidator : AbstractValidator<AddTagCommand>
+    {
+        public AddTagCommandValidator(ITagRules rules)
+        {
+            RuleFor(_ => _.Name)
+                .NotEmpty()
+                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Tag.Name)))
+                .MustAsync((_, token) => rules.IsNameUniqueAsync(_))
+                .WithMessage(_ => string.Format(ErrorConstants.EntityAlreadyExists, nameof(Tag), nameof(Tag.Name), _.Name));
+        }
     }
 
     public sealed class AddTagCommandHandler : IRequestHandler<AddTagCommand, OperationResult>
@@ -25,12 +38,7 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddTagCommand request, CancellationToken cancellationToken)
         {
-            if (await _studySharpDbContext.Tags.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower()), cancellationToken))
-            {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(Tag), nameof(Tag.Name), request.Name));
-            }
-
-            await _studySharpDbContext.Tags.AddAsync(new Tag { Name = request.Name });
+            await _studySharpDbContext.Tags.AddAsync(new Tag { Name = request.Name }, cancellationToken);
             await _studySharpDbContext.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }
