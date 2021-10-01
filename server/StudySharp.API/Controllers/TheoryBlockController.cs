@@ -70,7 +70,6 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        /*
         [HttpGet("{courseId:int}")]
         public async Task<OperationResult<GetTheoryBlockByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlockByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {
@@ -84,6 +83,6 @@ namespace StudySharp.API.Controllers
 
             var response = _mapper.Map<GetTheoryBlockByCourseIdResponse>(operationResult.Result);
             return OperationResult.Ok(response);
-        }*/
+        }
     }
 }
