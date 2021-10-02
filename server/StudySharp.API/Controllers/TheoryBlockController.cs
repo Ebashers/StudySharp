@@ -11,7 +11,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -20,7 +20,6 @@ namespace StudySharp.API.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        // comment to made commit with dev update
         public TheoryBlockController(IMediator mediator, IMapper mapper)
         {
             _mapper = mapper;
