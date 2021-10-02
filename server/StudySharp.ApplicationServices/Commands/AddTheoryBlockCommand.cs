@@ -27,9 +27,12 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddTheoryBlockCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.TheoryBlocks.AnyAsync(
-                _ => _.Name.ToLower().Equals(request.Name.ToLower()) && _.CourseId == request.CourseId,
-                cancellationToken))
+            if (await _context.Courses.AnyAsync(_ => _.Id != request.CourseId, cancellationToken))
+            {
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), request.CourseId));
+            }
+
+            if (await _context.TheoryBlocks.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower()) && _.CourseId == request.CourseId, cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Name));
             }
