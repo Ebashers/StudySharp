@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using StudySharp.ApplicationServices.EmailService.Models;
 using StudySharp.ApplicationServices.Infrastructure.EmailService;
 
 namespace StudySharp.ApplicationServices.EmailService
@@ -14,21 +15,21 @@ namespace StudySharp.ApplicationServices.EmailService
             _settings = options.Value;
         }
 
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(Email email, EmailContact contact)
         {
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress(_settings.Name, _settings.From));
-            emailMessage.To.Add(new MailboxAddress(string.Empty, email));
-            emailMessage.Subject = subject;
+            emailMessage.To.Add(new MailboxAddress(contact.Name, contact.Email));
+            emailMessage.Subject = email.Subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                Text = message,
+                Text = email.Body,
             };
 
             using var client = new SmtpClient();
-            await client.ConnectAsync("smtp.gmail.com", 587, false);
-            await client.AuthenticateAsync("ebashers.ss@gmail.com", "Gfhjkm1!");
+            await client.ConnectAsync(_settings.Smtp, _settings.Port, false);
+            await client.AuthenticateAsync(_settings.UserName, _settings.Password);
             await client.SendAsync(emailMessage);
 
             await client.DisconnectAsync(true);
