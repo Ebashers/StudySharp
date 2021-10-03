@@ -71,7 +71,7 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpGet("{courseId:int}/theory-blocks")]
-        public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlockByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
+        public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlocksByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {
             var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlockByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
             var operationResult = await _mediator.Send(getTheoryBlockByCourseIdQuery);
