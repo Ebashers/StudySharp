@@ -22,7 +22,7 @@ namespace StudySharp.ApplicationServices.ValidationRules
 
         public async Task<bool> IsTagIdExistAsync(int id, CancellationToken cancellationToken)
         {
-            return await _context.Tags.FindAsync(id, cancellationToken) != null;
+            return await _context.Tags.AnyAsync(_ => _.Id == id, cancellationToken);
         }
     }
 }
