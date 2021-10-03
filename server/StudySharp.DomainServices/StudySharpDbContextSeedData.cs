@@ -15,18 +15,39 @@ namespace StudySharp.DomainServices
         private const string AdminUserName = "UserName";
         private const string AdminPassword = "Password";
 
-        public static async Task InitializeAsync(IServiceProvider serviceProvider, IConfiguration configuration)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider, IConfiguration configuration, bool isDevelopmentEnvironment)
         {
             using var scope = serviceProvider.CreateScope();
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
-            await GenerateAndSeedRoles(roleManager);
+            if (isDevelopmentEnvironment)
+            {
+                await SyncDatabaseWithDomainRoles(roleManager);
+            }
+            else
+            {
+                await GenerateAndSeedRoles(roleManager);
+            }
+
             await GenerateAndSeedAdmin(userManager, configuration);
         }
 
         private static async Task GenerateAndSeedRoles(RoleManager<IdentityRole<int>> roleManager)
+        {
+            if (await roleManager.Roles.AnyAsync())
+            {
+                return;
+            }
+
+            foreach (var roleName in Enum.GetNames<DomainRoles>())
+            {
+                await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+            }
+        }
+
+        private static async Task SyncDatabaseWithDomainRoles(RoleManager<IdentityRole<int>> roleManager)
         {
             var storedRoles = await roleManager.Roles.Select(_ => _.Name).ToListAsync();
             var domainRoles = Enum.GetNames<DomainRoles>().ToList();
