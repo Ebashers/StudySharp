@@ -35,6 +35,7 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<OperationResult<Tag>> Get([FromQuery] GetTagByIdQuery getTagByIdQuery)
         {
             return await _mediator.Send(getTagByIdQuery);
