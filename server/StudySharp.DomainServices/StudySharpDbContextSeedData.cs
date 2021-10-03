@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,14 +28,27 @@ namespace StudySharp.DomainServices
 
         private static async Task GenerateAndSeedRoles(RoleManager<IdentityRole<int>> roleManager)
         {
-            if (await roleManager.Roles.AnyAsync())
+            var storedRoles = await roleManager.Roles.Select(_ => _.Name).ToListAsync();
+            var domainRoles = Enum.GetNames<DomainRoles>().ToList();
+            var union = domainRoles.Union(storedRoles);
+            var intersection = domainRoles.Intersect(storedRoles);
+
+            if (!union.Except(intersection).Any())
             {
                 return;
             }
 
-            foreach (var roleName in Enum.GetNames<DomainRoles>())
+            foreach (var roleName in union.Except(intersection))
             {
-                await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                if (storedRoles.Any(_ => _.Equals(roleName)))
+                {
+                    var role = await roleManager.FindByNameAsync(roleName);
+                    await roleManager.DeleteAsync(role);
+                }
+                else
+                {
+                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                }
             }
         }
 
