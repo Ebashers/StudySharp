@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,12 +60,19 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 return OperationResult.Fail<LoginResult>(ErrorConstants.InvalidCredentials);
             }
 
-            var jwtResult = _jwtService.GenerateTokens(user.UserName, new[] { new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName) }, DateTime.Now);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var roleClaims = userRoles.Select(_ => new Claim(ClaimsIdentity.DefaultRoleClaimType, _));
+            var userClaims = new List<Claim>(roleClaims)
+            {
+                new (ClaimsIdentity.DefaultNameClaimType, user.UserName),
+            };
+
+            var jwtResult = _jwtService.GenerateTokens(user.UserName, userClaims, DateTime.UtcNow);
 
             return OperationResult.Ok(new LoginResult
             {
                 UserName = user.UserName,
-                Role = "Test",
+                Roles = userRoles.ToList(),
                 AccessToken = jwtResult.AccessToken,
                 RefreshToken = jwtResult.RefreshToken.TokenString,
             });

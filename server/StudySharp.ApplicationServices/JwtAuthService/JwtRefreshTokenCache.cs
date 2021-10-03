@@ -10,9 +10,9 @@ namespace StudySharp.ApplicationServices.JwtAuthService
         private readonly IJwtService _jwtService;
         private Timer _timer;
 
-        public JwtRefreshTokenCache(IJwtService jwtAuthManager)
+        public JwtRefreshTokenCache(IJwtService jwtService)
         {
-            _jwtService = jwtAuthManager;
+            _jwtService = jwtService;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
@@ -26,7 +26,7 @@ namespace StudySharp.ApplicationServices.JwtAuthService
 
         private void DoWork(object state)
         {
-            _jwtService.RemoveExpiredRefreshTokens(DateTime.Now);
+            _jwtService.RemoveExpiredRefreshTokens(DateTime.UtcNow);
         }
 
         public Task StopAsync(CancellationToken stoppingToken)
