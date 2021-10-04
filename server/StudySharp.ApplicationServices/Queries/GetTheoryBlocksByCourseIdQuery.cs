@@ -25,7 +25,8 @@ namespace StudySharp.ApplicationServices.Queries
 
         public async Task<OperationResult<TheoryBlock>> Handle(GetTheoryBlocksByCourseIdQuery request, CancellationToken cancellationToken)
         {
-            if (await _context.Courses.AnyAsync(_ => _.Id != request.CourseId, cancellationToken))
+            var course = await _context.Courses.AnyAsync(_ => _.Id == request.CourseId, cancellationToken);
+            if (!course)
             {
                 return OperationResult.Fail<TheoryBlock>(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), request.CourseId));
             }
@@ -33,7 +34,7 @@ namespace StudySharp.ApplicationServices.Queries
             var theoryBlock = await _context.TheoryBlocks.FindAsync(request.CourseId);
             if (theoryBlock == null)
             {
-                return OperationResult.Fail<TheoryBlock>(string.Format(ErrorConstants.EntityNotFound, nameof(Course), request.CourseId, nameof(Course.TheoryBlocks)));
+                return OperationResult.Fail<TheoryBlock>(string.Format(ErrorConstants.EntityNotFound, nameof(Course.TheoryBlocks), nameof(TheoryBlock.CourseId), request.CourseId));
             }
 
             return OperationResult.Ok(theoryBlock);

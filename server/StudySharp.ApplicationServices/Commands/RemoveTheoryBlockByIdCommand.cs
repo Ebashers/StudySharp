@@ -26,12 +26,13 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(RemoveTheoryBlockByIdCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.Courses.AnyAsync(_ => _.Id != request.CourseId, cancellationToken))
+            var course = await _context.Courses.AnyAsync(_ => _.Id == request.CourseId, cancellationToken);
+            if (!course)
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), request.CourseId));
             }
 
-            var theoryBlock = await _context.TheoryBlocks.FirstOrDefaultAsync(_ => _.Id == request.Id && _.CourseId == request.CourseId);
+            var theoryBlock = await _context.TheoryBlocks.FirstOrDefaultAsync(_ => _.Id == request.Id, cancellationToken);
 
             if (theoryBlock == null)
             {
