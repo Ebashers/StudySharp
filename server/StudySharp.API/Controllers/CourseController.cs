@@ -26,6 +26,7 @@ namespace StudySharp.API.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<OperationResult> Add([FromBody] AddCourseRequest addCourseRequest)
         {
@@ -33,6 +34,7 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(addCourseCommand);
         }
 
+        [AllowAnonymous]
         [HttpDelete("{id:int}")]
         public async Task<OperationResult> Remove([FromRoute] RemoveCourseByIdRequest removeCourseByIdRequest)
         {
@@ -40,6 +42,7 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(removeCourseByIdCommand);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int}")]
         public async Task<OperationResult<GetCourseByIdResponse>> GetCourseById([FromRoute] GetCourseByIdRequest getCourseByIdRequest)
         {
@@ -55,7 +58,9 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [HttpGet("{teacherId:int}")]
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("~/api/teachers/{teacherId:int}/courses")]
         public async Task<OperationResult<GetCoursesByTeacherIdResponse>> GetCoursesByTeacherId([FromRoute] GetCoursesByTeacherIdRequest getCoursesByTeacherIdRequest)
         {
             var getCoursesByTeacherIdQuery = _mapper.Map<GetCoursesByTeacherIdQuery>(getCoursesByTeacherIdRequest);
@@ -70,6 +75,7 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<OperationResult<GetCoursesResponse>> GetCourses([FromBody] GetCoursesRequest getCoursesRequest)
         {
