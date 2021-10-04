@@ -11,7 +11,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -88,6 +88,22 @@ namespace StudySharp.API.Controllers
             }
 
             var response = _mapper.Map<GetCoursesResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<OperationResult<UpdateCourseResponse>> Update([FromRoute] int id, [FromBody] UpdateCourseByIdRequest updateCourseByIdRequest)
+        {
+            var updateCourseCommand = _mapper.Map<UpdateCourseCommand>(updateCourseByIdRequest);
+            updateCourseCommand.Id = id;
+            var operationResult = await _mediator.Send(updateCourseCommand);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<UpdateCourseResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<UpdateCourseResponse>(operationResult);
             return OperationResult.Ok(response);
         }
     }
