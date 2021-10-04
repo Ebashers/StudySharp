@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StudySharp.Domain.ValidationRules;
@@ -14,9 +15,14 @@ namespace StudySharp.ApplicationServices.ValidationRules
             _context = context;
         }
 
-        public async Task<bool> IsNameUniqueAsync(string name)
+        public async Task<bool> IsNameUniqueAsync(string name, CancellationToken cancellationToken)
         {
-            return !await _context.Tags.AnyAsync(_ => _.Name == name);
+            return !await _context.Tags.AnyAsync(_ => _.Name == name, cancellationToken);
+        }
+
+        public async Task<bool> IsTagIdExistAsync(int id, CancellationToken cancellationToken)
+        {
+            return await _context.Tags.AnyAsync(_ => _.Id == id, cancellationToken);
         }
     }
 }
