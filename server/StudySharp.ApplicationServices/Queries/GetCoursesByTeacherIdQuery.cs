@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
 using StudySharp.DomainServices;
@@ -26,7 +27,13 @@ namespace StudySharp.ApplicationServices.Queries
 
         public async Task<OperationResult<List<Course>>> Handle(GetCoursesByTeacherIdQuery request, CancellationToken cancellationToken)
         {
-            var courses = await _context.Courses.Where(_ => _.TeacherId == request.TeacherId).ToListAsync();
+            var isTeacherExistent = await _context.Teachers.AnyAsync(_ => _.Id == request.TeacherId, cancellationToken);
+            if (!isTeacherExistent)
+            {
+                return OperationResult.Fail<List<Course>>(string.Format(ErrorConstants.EntityNotFound, nameof(Teacher), nameof(Teacher.Id), request.TeacherId));
+            }
+
+            var courses = await _context.Courses.Where(_ => _.TeacherId == request.TeacherId).ToListAsync(cancellationToken);
             return OperationResult.Ok(courses);
         }
     }
