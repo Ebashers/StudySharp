@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace StudySharp.API.Requests.TheoryBlocks
 {
     public class UpdateTheoryBlockByIdRequest

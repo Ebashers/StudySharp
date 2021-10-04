@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.TheoryBlocks;
 using StudySharp.API.Responses.TheoryBlocks;
@@ -26,11 +25,12 @@ namespace StudySharp.API.Controllers
             _mediator = mediator;
         }
 
-        // works
+        // +2 works
         [HttpPost("{courseId:int}/theory-blocks")]
-        public async Task<OperationResult> Add([FromBody] AddTheoryBlockRequest addTheoryBlockRequest)
+        public async Task<OperationResult> Add([FromRoute] int courseId, [FromBody] AddTheoryBlockRequest addTheoryBlockRequest)
         {
             var addTheoryBlockCommand = _mapper.Map<AddTheoryBlockCommand>(addTheoryBlockRequest);
+            addTheoryBlockCommand.CourseId = courseId;
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
@@ -42,7 +42,7 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
 
-        // +2 works, operation result fail needs to be reworked
+        // +2 works
         [HttpGet("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
