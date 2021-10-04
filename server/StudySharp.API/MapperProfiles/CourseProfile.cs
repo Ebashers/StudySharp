@@ -13,6 +13,7 @@ namespace StudySharp.API.MapperProfiles
             CreateMap<RemoveCourseByIdRequest, RemoveCourseByIdCommand>();
             CreateMap<GetCourseByIdRequest, GetCourseByIdQuery>();
             CreateMap<GetCoursesRequest, GetCoursesQuery>();
+            CreateMap<GetCoursesByTeacherIdRequest, GetCoursesByTeacherIdQuery>();
         }
     }
 }
