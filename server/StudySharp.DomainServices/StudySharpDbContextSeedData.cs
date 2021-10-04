@@ -14,9 +14,15 @@ namespace StudySharp.DomainServices
         private const string AdminCredentialsSection = "AdminCredentials";
         private const string AdminUserName = "UserName";
         private const string AdminPassword = "Password";
+        private static bool _isInitialized;
 
         public static async Task InitializeAsync(IServiceProvider serviceProvider, IConfiguration configuration, bool isDevelopmentEnvironment)
         {
+            if (_isInitialized)
+            {
+                return;
+            }
+
             using var scope = serviceProvider.CreateScope();
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -32,6 +38,8 @@ namespace StudySharp.DomainServices
             }
 
             await GenerateAndSeedAdmin(userManager, configuration);
+
+            _isInitialized = true;
         }
 
         private static async Task GenerateAndSeedRoles(RoleManager<IdentityRole<int>> roleManager)
