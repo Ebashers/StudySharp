@@ -55,7 +55,7 @@ namespace StudySharp.API.Controllers
         [HttpPost("logout")]
         public async Task<OperationResult> Logout()
         {
-            var userName = User.Identity.Name;
+            var userName = User.Identity?.Name;
             return await _mediator.Send(new LogoutCommand { UserName = userName });
         }
 

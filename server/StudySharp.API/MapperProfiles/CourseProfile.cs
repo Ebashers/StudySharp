@@ -14,6 +14,7 @@ namespace StudySharp.API.MapperProfiles
             CreateMap<GetCourseByIdRequest, GetCourseByIdQuery>();
             CreateMap<GetCoursesRequest, GetCoursesQuery>();
             CreateMap<GetCoursesByTeacherIdRequest, GetCoursesByTeacherIdQuery>();
+            CreateMap<UpdateCourseByIdRequest, UpdateCourseCommand>();
         }
     }
 }
