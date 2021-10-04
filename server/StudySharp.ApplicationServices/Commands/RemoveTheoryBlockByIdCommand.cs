@@ -35,7 +35,7 @@ namespace StudySharp.ApplicationServices.Commands
 
             if (theoryBlock == null)
             {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Id), nameof(TheoryBlock.CourseId), request.Id, request.CourseId));
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Id), request.Id));
             }
 
             _context.TheoryBlocks.Remove(theoryBlock);

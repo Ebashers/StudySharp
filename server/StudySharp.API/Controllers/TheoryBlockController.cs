@@ -11,8 +11,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    // TODO delete Authorize comment
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -35,15 +34,15 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
-        // todo test delete
-        [HttpDelete("{courseId:int}/theory-blocks/{theoryBlockId:int}")]
-        public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
+        // FromRoute do not works
+        [HttpDelete("{courseId:int}/theory-blocks/{id:int}")]
+        public async Task<OperationResult> Remove([FromBody] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
         {
             var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
             return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
 
-        // todo test get (id)
+        // works, fail return partly correct
         [HttpGet("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
@@ -59,9 +58,9 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        // todo test put
-        [HttpPut("{courseId:int}/theory-blocks/{theoryBlockId:int}")]
-        public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromRoute] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
+        // works, but without CourseId exception
+        [HttpPut("{courseId:int}/theory-blocks/{id:int}")]
+        public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromBody] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
         {
             var updateTheoryBlockCommand = _mapper.Map<UpdateTheoryBlockCommand>(updateTheoryBlockByIdRequest);
             var operationResult = await _mediator.Send(updateTheoryBlockCommand);
