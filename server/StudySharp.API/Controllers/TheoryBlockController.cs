@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.TheoryBlocks;
 using StudySharp.API.Responses.TheoryBlocks;
@@ -11,7 +10,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -34,13 +33,6 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
-        [HttpDelete("{courseId:int}/theory-blocks/{id:int}")]
-        public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
-        {
-            var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
-            return await _mediator.Send(removeTheoryBlockByIdCommand);
-        }
-
         [HttpGet("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
@@ -53,6 +45,21 @@ namespace StudySharp.API.Controllers
             }
 
             var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpGet("{courseId:int}/theory-blocks")]
+        public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlocksByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
+        {
+            var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlocksByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
+            var operationResult = await _mediator.Send(getTheoryBlockByCourseIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetTheoryBlocksByCourseIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetTheoryBlocksByCourseIdResponse>(operationResult.Result);
             return OperationResult.Ok(response);
         }
 
@@ -73,19 +80,11 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [HttpGet("{courseId:int}/theory-blocks")]
-        public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlocksByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
+        [HttpDelete("{courseId:int}/theory-blocks/{id:int}")]
+        public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
         {
-            var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlocksByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
-            var operationResult = await _mediator.Send(getTheoryBlockByCourseIdQuery);
-
-            if (!operationResult.IsSucceeded)
-            {
-                return OperationResult.Fail<GetTheoryBlocksByCourseIdResponse>(operationResult.Errors);
-            }
-
-            var response = _mapper.Map<GetTheoryBlocksByCourseIdResponse>(operationResult.Result);
-            return OperationResult.Ok(response);
+            var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
+            return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
     }
 }

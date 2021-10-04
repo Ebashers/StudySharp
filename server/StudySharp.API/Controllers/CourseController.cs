@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.Courses;
 using StudySharp.API.Responses.Courses;
@@ -26,7 +25,6 @@ namespace StudySharp.API.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<OperationResult> Add([FromBody] AddCourseRequest addCourseRequest)
         {
@@ -34,15 +32,6 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(addCourseCommand);
         }
 
-        [AllowAnonymous]
-        [HttpDelete("{id:int}")]
-        public async Task<OperationResult> Remove([FromRoute] RemoveCourseByIdRequest removeCourseByIdRequest)
-        {
-            var removeCourseByIdCommand = _mapper.Map<RemoveCourseByIdCommand>(removeCourseByIdRequest);
-            return await _mediator.Send(removeCourseByIdCommand);
-        }
-
-        [AllowAnonymous]
         [HttpGet("{id:int}")]
         public async Task<OperationResult<GetCourseByIdResponse>> GetCourseById([FromRoute] GetCourseByIdRequest getCourseByIdRequest)
         {
@@ -58,7 +47,6 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("~/api/teachers/{teacherId:int}/courses")]
         public async Task<OperationResult<GetCoursesByTeacherIdResponse>> GetCoursesByTeacherId([FromRoute] GetCoursesByTeacherIdRequest getCoursesByTeacherIdRequest)
@@ -75,7 +63,6 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<OperationResult<GetCoursesResponse>> GetCourses([FromBody] GetCoursesRequest getCoursesRequest)
         {
@@ -105,6 +92,13 @@ namespace StudySharp.API.Controllers
 
             var response = _mapper.Map<UpdateCourseResponse>(operationResult);
             return OperationResult.Ok(response);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<OperationResult> Remove([FromRoute] RemoveCourseByIdRequest removeCourseByIdRequest)
+        {
+            var removeCourseByIdCommand = _mapper.Map<RemoveCourseByIdCommand>(removeCourseByIdRequest);
+            return await _mediator.Send(removeCourseByIdCommand);
         }
     }
 }
