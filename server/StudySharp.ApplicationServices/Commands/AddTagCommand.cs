@@ -22,7 +22,7 @@ namespace StudySharp.ApplicationServices.Commands
             RuleFor(_ => _.Name)
                 .NotEmpty()
                 .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Tag.Name)))
-                .MustAsync((_, token) => rules.IsNameUniqueAsync(_))
+                .MustAsync(rules.IsNameUniqueAsync)
                 .WithMessage(_ => string.Format(ErrorConstants.EntityAlreadyExists, nameof(Tag), nameof(Tag.Name), _.Name));
         }
     }

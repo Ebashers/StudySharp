@@ -9,23 +9,24 @@ using StudySharp.DomainServices;
 
 namespace StudySharp.ApplicationServices.Commands
 {
-    public sealed class AddTheoryBlockCommand : IRequest<OperationResult>
+    public sealed class UpdateTheoryBlockCommand : IRequest<OperationResult>
     {
+        public int Id { get; set; }
+        public int CourseId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int CourseId { get; set; }
     }
 
-    public sealed class AddTheoryBlockCommandHandler : IRequestHandler<AddTheoryBlockCommand, OperationResult>
+    public sealed class UpdateTheoryBlockCommandHandler : IRequestHandler<UpdateTheoryBlockCommand, OperationResult>
     {
         private readonly StudySharpDbContext _context;
 
-        public AddTheoryBlockCommandHandler(StudySharpDbContext sharpDbContext)
+        public UpdateTheoryBlockCommandHandler(StudySharpDbContext sharpDbContext)
         {
             _context = sharpDbContext;
         }
 
-        public async Task<OperationResult> Handle(AddTheoryBlockCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult> Handle(UpdateTheoryBlockCommand request, CancellationToken cancellationToken)
         {
             var courseExistent = await _context.Courses.AnyAsync(_ => _.Id == request.CourseId, cancellationToken);
             if (!courseExistent)
@@ -33,19 +34,16 @@ namespace StudySharp.ApplicationServices.Commands
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), request.CourseId));
             }
 
-            if (await _context.TheoryBlocks.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower()), cancellationToken))
+            var theoryBlock = await _context.TheoryBlocks.FirstOrDefaultAsync(_ => _.Id == request.Id, cancellationToken);
+            if (theoryBlock == null)
             {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(TheoryBlock), nameof(TheoryBlock.Name), request.Name));
+                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(TheoryBlock), nameof(TheoryBlock.Id), request.Id));
             }
 
-            await _context.TheoryBlocks.AddAsync(
-                new TheoryBlock
-                {
-                    Name = request.Name,
-                    CourseId = request.CourseId,
-                    Description = request.Description,
-                }, cancellationToken);
+            theoryBlock.Name = request.Name;
+            theoryBlock.Description = request.Description;
 
+            _context.TheoryBlocks.Update(theoryBlock);
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();
         }

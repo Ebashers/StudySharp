@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StudySharp.ApplicationServices.Commands;
 using StudySharp.ApplicationServices.EmailService;
+using StudySharp.ApplicationServices.EmailService.Constants;
 using StudySharp.ApplicationServices.EmailService.Models;
 using StudySharp.ApplicationServices.Queries;
 using StudySharp.Domain.General;
@@ -47,9 +48,12 @@ namespace StudySharp.API.Controllers
         }
 
         [HttpPut]
-        public async Task<OperationResult> SendMessage([FromBody] Email email)
+        [AllowAnonymous]
+        public async Task<OperationResult> SendMessage()
         {
-            await _emailService.SendEmailAsync(email.To, "Test", email.Message);
+            await _emailService.SendEmailAsync(
+                EmailTemplates.Default.Build("Text, token, url, etc."),
+                new EmailContact("User First and Last name", "kotohomka@gmail.com"));
             return OperationResult.Ok();
         }
     }
