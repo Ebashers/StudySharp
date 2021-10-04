@@ -11,7 +11,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -34,15 +34,15 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
-        // FromRoute do not works
+        // +2 works
         [HttpDelete("{courseId:int}/theory-blocks/{id:int}")]
-        public async Task<OperationResult> Remove([FromBody] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
+        public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
         {
             var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
             return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
 
-        // works, fail return partly correct
+        // +2 works, operation result fail needs to be reworked
         [HttpGet("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
@@ -58,11 +58,13 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        // works, but without CourseId exception
+        // +2 works
         [HttpPut("{courseId:int}/theory-blocks/{id:int}")]
-        public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromBody] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
+        public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromRoute] int id, [FromRoute] int courseId, [FromBody] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
         {
             var updateTheoryBlockCommand = _mapper.Map<UpdateTheoryBlockCommand>(updateTheoryBlockByIdRequest);
+            updateTheoryBlockCommand.Id = id;
+            updateTheoryBlockCommand.CourseId = courseId;
             var operationResult = await _mediator.Send(updateTheoryBlockCommand);
 
             if (!operationResult.IsSucceeded)
@@ -74,7 +76,7 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        // works
+        // +2 works
         [HttpGet("{courseId:int}/theory-blocks")]
         public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlocksByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {
