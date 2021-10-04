@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.TheoryBlocks;
 using StudySharp.API.Responses.TheoryBlocks;
@@ -10,7 +11,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/courses")]
 
@@ -25,7 +26,6 @@ namespace StudySharp.API.Controllers
             _mediator = mediator;
         }
 
-        // +3 works
         [HttpPost("{courseId:int}/theory-blocks")]
         public async Task<OperationResult> Add([FromRoute] int courseId, [FromBody] AddTheoryBlockRequest addTheoryBlockRequest)
         {
@@ -34,7 +34,6 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(addTheoryBlockCommand);
         }
 
-        // +2 works, courseId exception doesnt work (to test)(works)
         [HttpDelete("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
         {
@@ -42,7 +41,6 @@ namespace StudySharp.API.Controllers
             return await _mediator.Send(removeTheoryBlockByIdCommand);
         }
 
-        // +2 works, courseId exception doesnt work (to test)(works)
         [HttpGet("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
         {
@@ -58,7 +56,6 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        // +3 works
         [HttpPut("{courseId:int}/theory-blocks/{id:int}")]
         public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromRoute] int id, [FromRoute] int courseId, [FromBody] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
         {
@@ -76,7 +73,6 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
-        // +2 works, check exceptions (to test)(works), check courseId exception (works)
         [HttpGet("{courseId:int}/theory-blocks")]
         public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlocksByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
         {
