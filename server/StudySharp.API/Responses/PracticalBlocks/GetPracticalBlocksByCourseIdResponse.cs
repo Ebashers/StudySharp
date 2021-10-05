@@ -5,6 +5,6 @@ namespace StudySharp.API.Responses.PracticalBlocks
 {
     public class GetPracticalBlocksByCourseIdResponse
     {
-        public List<TheoryBlock> TheoryBlocks { get; set; }
+        public List<PracticalBlock> PracticalBlocks { get; set; }
     }
 }
