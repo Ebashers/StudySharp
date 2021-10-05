@@ -12,6 +12,7 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class AddPracticalBlockCommand : IRequest<OperationResult>
     {
         public string Name { get; set; }
+        public int CourseId { get; set; }
     }
 
     public sealed class AddPracticalBlockCommandHandler : IRequestHandler<AddPracticalBlockCommand, OperationResult>
