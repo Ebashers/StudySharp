@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StudySharp.ApplicationServices.Commands;
 using StudySharp.ApplicationServices.EmailService;
+using StudySharp.ApplicationServices.EmailService.Constants;
 using StudySharp.ApplicationServices.EmailService.Models;
 using StudySharp.ApplicationServices.Queries;
 using StudySharp.Domain.General;
@@ -11,8 +13,9 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.API.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -34,19 +37,23 @@ namespace StudySharp.API.Controllers
         [HttpGet]
         public async Task<OperationResult<Tag>> Get([FromQuery] GetTagByIdQuery getTagByIdQuery)
         {
-            return await _mediator.Send<OperationResult<Tag>>(getTagByIdQuery);
+            return await _mediator.Send(getTagByIdQuery);
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<OperationResult> Add([FromBody] AddTagCommand addTagCommand)
         {
-            return await _mediator.Send<OperationResult>(addTagCommand);
+            return await _mediator.Send(addTagCommand);
         }
 
         [HttpPut]
-        public async Task<OperationResult> SendMessage([FromBody] Email email)
+        [AllowAnonymous]
+        public async Task<OperationResult> SendMessage()
         {
-            await _emailService.SendEmailAsync(email.To, "Test", email.Message);
+            await _emailService.SendEmailAsync(
+                EmailTemplates.Default.Build("Text, token, url, etc."),
+                new EmailContact("User First and Last name", "kotohomka@gmail.com"));
             return OperationResult.Ok();
         }
     }

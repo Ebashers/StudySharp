@@ -10,7 +10,7 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.DomainServices
 {
-    public class StudySharpDbContext : IdentityDbContext<IdentityUser>
+    public class StudySharpDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Course> Courses { get; set; }

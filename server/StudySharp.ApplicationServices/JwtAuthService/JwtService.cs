@@ -7,11 +7,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace StudySharp.ApplicationServices.JwtService
+namespace StudySharp.ApplicationServices.JwtAuthService
 {
-    public interface IJwtAuthManager
+    public interface IJwtService
     {
         IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary { get; }
         JwtAuthResult GenerateTokens(string username, Claim[] claims, DateTime now);
@@ -21,18 +22,18 @@ namespace StudySharp.ApplicationServices.JwtService
         (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token);
     }
 
-    public class JwtAuthManager : IJwtAuthManager
+    public class JwtService : IJwtService
     {
         public IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary => _usersRefreshTokens.ToImmutableDictionary();
         private readonly ConcurrentDictionary<string, RefreshToken> _usersRefreshTokens;  // can store in a database or a distributed cache
         private readonly JwtTokenConfig _jwtTokenConfig;
         private readonly byte[] _secret;
 
-        public JwtAuthManager(JwtTokenConfig jwtTokenConfig)
+        public JwtService(IOptions<JwtTokenConfig> jwtTokenConfigOptions)
         {
-            _jwtTokenConfig = jwtTokenConfig;
+            _jwtTokenConfig = jwtTokenConfigOptions.Value;
             _usersRefreshTokens = new ConcurrentDictionary<string, RefreshToken>();
-            _secret = Encoding.ASCII.GetBytes(jwtTokenConfig.Secret);
+            _secret = Encoding.ASCII.GetBytes(jwtTokenConfigOptions.Value.Secret);
         }
 
         // optional: clean up expired refresh tokens
@@ -122,7 +123,7 @@ namespace StudySharp.ApplicationServices.JwtService
                         ValidAudience = _jwtTokenConfig.Audience,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1),
+                        ClockSkew = TimeSpan.Zero,
                     },
                     out var validatedToken);
             return (principal, validatedToken as JwtSecurityToken);

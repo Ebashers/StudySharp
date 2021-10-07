@@ -26,7 +26,9 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddCourseCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.Courses.AnyAsync(c => Equals(c.Name.ToLower(), request.Name.ToLower()) && c.TeacherId == request.TeacherId, cancellationToken))
+            if (await _context.Courses.AnyAsync(
+                _ => _.Name.ToLower().Equals(request.Name.ToLower()) && _.TeacherId == request.TeacherId,
+                cancellationToken))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(Course), nameof(Course.Name), request.Name));
             }
@@ -34,7 +36,8 @@ namespace StudySharp.ApplicationServices.Commands
             await _context.Courses.AddAsync(
                 new Course
                 {
-                    Name = request.Name, TeacherId = request.TeacherId,
+                    Name = request.Name,
+                    TeacherId = request.TeacherId,
                 }, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
