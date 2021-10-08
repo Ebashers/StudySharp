@@ -1,8 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 
-namespace StudySharp.ApplicationServices.ValidationRules
+namespace StudySharp.Domain.ValidationRules
 {
     public interface ICourseRules : IValidationRule
     {
