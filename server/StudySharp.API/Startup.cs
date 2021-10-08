@@ -96,7 +96,7 @@ namespace StudySharp.API
             })
                 .EnsureDbMigrated<StudySharpDbContext>();
 
-            StudySharpDbContextSeedData.InitializeAsync(app.ApplicationServices, Configuration);
+            StudySharpDbContextSeedData.InitializeAsync(app.ApplicationServices, Configuration, env.IsDevelopment());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -9,15 +10,16 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using StudySharp.Domain.Constants;
 
 namespace StudySharp.ApplicationServices.JwtAuthService
 {
     public interface IJwtService
     {
         IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary { get; }
-        JwtAuthResult GenerateTokens(string username, Claim[] claims, DateTime now);
-        JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now);
-        void RemoveExpiredRefreshTokens(DateTime now);
+        JwtAuthResult GenerateTokens(string username, List<Claim> claims, DateTime utcNow);
+        JwtAuthResult Refresh(string refreshToken, string accessToken, List<Claim> claims, DateTime utcNow);
+        void RemoveExpiredRefreshTokens(DateTime utcNow);
         void RemoveRefreshTokenByUserName(string userName);
         (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token);
     }
@@ -37,9 +39,9 @@ namespace StudySharp.ApplicationServices.JwtAuthService
         }
 
         // optional: clean up expired refresh tokens
-        public void RemoveExpiredRefreshTokens(DateTime now)
+        public void RemoveExpiredRefreshTokens(DateTime utcNow)
         {
-            var expiredTokens = _usersRefreshTokens.Where(x => x.Value.ExpireAt < now).ToList();
+            var expiredTokens = _usersRefreshTokens.Where(x => x.Value.ExpireAt < utcNow).ToList();
             foreach (var expiredToken in expiredTokens)
             {
                 _usersRefreshTokens.TryRemove(expiredToken.Key, out _);
@@ -56,14 +58,14 @@ namespace StudySharp.ApplicationServices.JwtAuthService
             }
         }
 
-        public JwtAuthResult GenerateTokens(string username, Claim[] claims, DateTime now)
+        public JwtAuthResult GenerateTokens(string username, List<Claim> claims, DateTime utcNow)
         {
-            var shouldAddAudienceClaim = string.IsNullOrWhiteSpace(claims?.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Aud)?.Value);
+            var shouldAddAudienceClaim = string.IsNullOrWhiteSpace(claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Aud)?.Value);
             var jwtToken = new JwtSecurityToken(
                 _jwtTokenConfig.Issuer,
                 shouldAddAudienceClaim ? _jwtTokenConfig.Audience : string.Empty,
                 claims,
-                expires: now.AddMinutes(_jwtTokenConfig.AccessTokenExpiration),
+                expires: utcNow.AddMinutes(_jwtTokenConfig.AccessTokenExpiration),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature));
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
@@ -71,7 +73,7 @@ namespace StudySharp.ApplicationServices.JwtAuthService
             {
                 UserName = username,
                 TokenString = GenerateRefreshTokenString(),
-                ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration),
+                ExpireAt = utcNow.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration),
             };
             _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (_, _) => refreshToken);
 
@@ -82,33 +84,33 @@ namespace StudySharp.ApplicationServices.JwtAuthService
             };
         }
 
-        public JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now)
+        public JwtAuthResult Refresh(string refreshToken, string accessToken, List<Claim> claims, DateTime utcNow)
         {
             var (principal, jwtToken) = DecodeJwtToken(accessToken);
             if (jwtToken == null || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256Signature))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException(ErrorConstants.InvalidToken);
             }
 
             var userName = principal.Identity?.Name;
             if (!_usersRefreshTokens.TryGetValue(refreshToken, out var existingRefreshToken))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException(ErrorConstants.InvalidToken);
             }
 
-            if (existingRefreshToken.UserName != userName || existingRefreshToken.ExpireAt < now)
+            if (existingRefreshToken.UserName != userName || existingRefreshToken.ExpireAt < utcNow)
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException(ErrorConstants.InvalidToken);
             }
 
-            return GenerateTokens(userName, principal.Claims.ToArray(), now); // need to recover the original claims
+            return GenerateTokens(userName, claims, utcNow);
         }
 
         public (ClaimsPrincipal principal, JwtSecurityToken?) DecodeJwtToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException(ErrorConstants.InvalidToken);
             }
 
             var principal = new JwtSecurityTokenHandler()
