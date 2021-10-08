@@ -1,6 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
+using StudySharp.ApplicationServices.ValidationRules;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
@@ -11,6 +13,16 @@ namespace StudySharp.ApplicationServices.Commands
     public sealed class RemoveCourseByIdCommand : IRequest<OperationResult>
     {
         public int Id { get; set; }
+    }
+
+    public class RemoveCourseByIdCommandValidator : AbstractValidator<RemoveCourseByIdCommand>
+    {
+        public RemoveCourseByIdCommandValidator(ICourseRules rules)
+        {
+            RuleFor(_ => _.Id)
+                .MustAsync((_, token) => rules.IsCourseIdExistAsync(_, token))
+                .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), _.Id));
+        }
     }
 
     public sealed class RemoveCourseByIdCommandHandler : IRequestHandler<RemoveCourseByIdCommand, OperationResult>
@@ -25,11 +37,6 @@ namespace StudySharp.ApplicationServices.Commands
         public async Task<OperationResult> Handle(RemoveCourseByIdCommand request, CancellationToken cancellationToken)
         {
             var course = await _context.Courses.FindAsync(request.Id, cancellationToken);
-            if (course == null)
-            {
-                return OperationResult.Fail(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Name), request.Id));
-            }
-
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();

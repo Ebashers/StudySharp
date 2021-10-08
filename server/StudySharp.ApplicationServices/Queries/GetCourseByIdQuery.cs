@@ -1,6 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
+using StudySharp.ApplicationServices.ValidationRules;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
@@ -11,6 +13,16 @@ namespace StudySharp.ApplicationServices.Queries
     public sealed class GetCourseByIdQuery : IRequest<OperationResult<Course>>
     {
         public int Id { get; set; }
+    }
+
+    public class GetCourseByIdQueryValidator : AbstractValidator<GetCourseByIdQuery>
+    {
+        public GetCourseByIdQueryValidator(ICourseRules rules)
+        {
+            RuleFor(_ => _.Id)
+                .MustAsync((_, token) => rules.IsCourseIdExistAsync(_, token))
+                .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), _.Id));
+        }
     }
 
     public sealed class GetCourseByIdQueryHandler : IRequestHandler<GetCourseByIdQuery, OperationResult<Course>>
@@ -25,11 +37,6 @@ namespace StudySharp.ApplicationServices.Queries
         public async Task<OperationResult<Course>> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
             var course = await _context.Courses.FindAsync(request.Id, cancellationToken);
-            if (course == null)
-            {
-                return OperationResult.Fail<Course>(string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), request.Id));
-            }
-
             return OperationResult.Ok(course);
         }
     }

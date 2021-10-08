@@ -1,7 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using StudySharp.ApplicationServices.ValidationRules;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
@@ -13,6 +15,24 @@ namespace StudySharp.ApplicationServices.Commands
     {
         public string Name { get; set; }
         public int TeacherId { get; set; }
+    }
+
+    public class AddCourseCommandValidator : AbstractValidator<AddCourseCommand>
+    {
+        public AddCourseCommandValidator(ICourseRules rules)
+        {
+            RuleFor(_ => _.Name)
+                .NotEmpty()
+                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Course.Name)))
+                .MustAsync((_, token) => rules.IsNameUniqueAsync(_, token))
+                .WithMessage(_ => string.Format(ErrorConstants.EntityAlreadyExists, nameof(Course), nameof(Course.Name), _.Name));
+
+            RuleFor(_ => _.TeacherId)
+                .NotEmpty()
+                .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Course.TeacherId)))
+                .MustAsync((_, token) => rules.IsTeacherIdExistAsync(_, token))
+                .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Teacher), nameof(Teacher.Id), _.TeacherId));
+        }
     }
 
     public sealed class AddCourseCommandHandler : IRequestHandler<AddCourseCommand, OperationResult>
