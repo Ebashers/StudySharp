@@ -33,7 +33,7 @@ namespace StudySharp.ApplicationServices.Commands
             RuleFor(_ => _.Name)
                 .NotEmpty()
                 .WithMessage(_ => string.Format(ErrorConstants.FieldIsRequired, nameof(PracticalBlock), nameof(PracticalBlock.Name), _.Name))
-                .MaximumLength(130)
+                .MaximumLength(120)
                 .WithMessage(_ => string.Format(ErrorConstants.InvalidToken, nameof(PracticalBlock), nameof(PracticalBlock.Name), _.Name));
             RuleFor(_ => _.Description)
                 .MaximumLength(512)
