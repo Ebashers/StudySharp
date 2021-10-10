@@ -30,6 +30,14 @@ namespace StudySharp.ApplicationServices.Commands
             RuleFor(_ => _.Id)
                 .MustAsync((_, token) => rules.IsPracticalBlockIdExistAsync(_, token))
                 .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(PracticalBlock), nameof(PracticalBlock.Id), _.Id));
+            RuleFor(_ => _.Name)
+                .NotEmpty()
+                .WithMessage(_ => string.Format(ErrorConstants.FieldIsRequired, nameof(PracticalBlock), nameof(PracticalBlock.Name), _.Name))
+                .MaximumLength(130)
+                .WithMessage(_ => string.Format(ErrorConstants.InvalidToken, nameof(PracticalBlock), nameof(PracticalBlock.Name), _.Name));
+            RuleFor(_ => _.Description)
+                .MaximumLength(512)
+                .WithMessage(_ => string.Format(ErrorConstants.InvalidToken, nameof(PracticalBlock), nameof(PracticalBlock.Name), _.Name));
         }
     }
 
