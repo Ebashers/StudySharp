@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,16 +14,32 @@ namespace StudySharp.DomainServices
         private const string AdminCredentialsSection = "AdminCredentials";
         private const string AdminUserName = "UserName";
         private const string AdminPassword = "Password";
+        private static bool _isInitialized;
 
-        public static async Task InitializeAsync(IServiceProvider serviceProvider, IConfiguration configuration)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider, IConfiguration configuration, bool isDevelopmentEnvironment)
         {
+            if (_isInitialized)
+            {
+                return;
+            }
+
             using var scope = serviceProvider.CreateScope();
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
-            await GenerateAndSeedRoles(roleManager);
+            if (isDevelopmentEnvironment)
+            {
+                await SyncDatabaseWithDomainRoles(roleManager);
+            }
+            else
+            {
+                await GenerateAndSeedRoles(roleManager);
+            }
+
             await GenerateAndSeedAdmin(userManager, configuration);
+
+            _isInitialized = true;
         }
 
         private static async Task GenerateAndSeedRoles(RoleManager<IdentityRole<int>> roleManager)
@@ -35,6 +52,32 @@ namespace StudySharp.DomainServices
             foreach (var roleName in Enum.GetNames<DomainRoles>())
             {
                 await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+            }
+        }
+
+        private static async Task SyncDatabaseWithDomainRoles(RoleManager<IdentityRole<int>> roleManager)
+        {
+            var storedRoles = await roleManager.Roles.Select(_ => _.Name).ToListAsync();
+            var domainRoles = Enum.GetNames<DomainRoles>().ToList();
+            var union = domainRoles.Union(storedRoles);
+            var intersection = domainRoles.Intersect(storedRoles);
+
+            if (!union.Except(intersection).Any())
+            {
+                return;
+            }
+
+            foreach (var roleName in union.Except(intersection))
+            {
+                if (storedRoles.Any(_ => _.Equals(roleName)))
+                {
+                    var role = await roleManager.FindByNameAsync(roleName);
+                    await roleManager.DeleteAsync(role);
+                }
+                else
+                {
+                    await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                }
             }
         }
 

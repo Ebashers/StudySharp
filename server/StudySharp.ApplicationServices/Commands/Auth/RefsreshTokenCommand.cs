@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -57,12 +60,18 @@ namespace StudySharp.ApplicationServices.Commands.Auth
             try
             {
                 var user = await _userManager.FindByNameAsync(request.UserName);
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var roleClaims = userRoles.Select(_ => new Claim(ClaimsIdentity.DefaultRoleClaimType, _));
+                var userClaims = new List<Claim>(roleClaims)
+                {
+                    new (ClaimsIdentity.DefaultNameClaimType, user.UserName),
+                };
 
-                var jwtResult = _jwtService.Refresh(request.RefreshToken, request.AccessToken, DateTime.Now);
+                var jwtResult = _jwtService.Refresh(request.RefreshToken, request.AccessToken, userClaims, DateTime.UtcNow);
                 return OperationResult.Ok(new RefreshTokenResult
                 {
                     UserName = user.UserName,
-                    Role = "Test",
+                    Roles = userRoles.ToList(),
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString,
                 });

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using StudySharp.ApplicationServices.ValidationRules.Auth;
 using StudySharp.Domain.Constants;
+using StudySharp.Domain.Enums;
 using StudySharp.Domain.General;
 using StudySharp.DomainServices;
 
@@ -57,11 +58,18 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 Email = request.Email,
             };
 
-            var result = await _userManager.CreateAsync(newUser, request.Password);
+            var userRegisteredResult = await _userManager.CreateAsync(newUser, request.Password);
 
-            if (!result.Succeeded)
+            if (!userRegisteredResult.Succeeded)
             {
-                return OperationResult.Fail(result.Errors.Select(_ => _.Description).ToList());
+                return OperationResult.Fail(userRegisteredResult.Errors.Select(_ => _.Description).ToList());
+            }
+
+            var userObtainedRoleStudentResult = await _userManager.AddToRoleAsync(newUser, DomainRoles.Student.ToString());
+
+            if (!userObtainedRoleStudentResult.Succeeded)
+            {
+                return OperationResult.Fail(userObtainedRoleStudentResult.Errors.Select(_ => _.Description).ToList());
             }
 
             return OperationResult.Ok();
