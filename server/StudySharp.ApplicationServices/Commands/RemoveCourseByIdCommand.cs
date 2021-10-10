@@ -21,7 +21,7 @@ namespace StudySharp.ApplicationServices.Commands
         public RemoveCourseByIdCommandValidator(ICourseRules rules)
         {
             RuleFor(_ => _.Id)
-                .MustAsync((_, token) => rules.IsCourseIdExistAsync(_, token))
+                .MustAsync(rules.IsCourseIdExistAsync)
                 .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), _.Id));
         }
     }
@@ -37,7 +37,7 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(RemoveCourseByIdCommand request, CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.FindAsync(request.Id, cancellationToken);
+            var course = await _context.Courses.FindAsync(request.Id);
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync(cancellationToken);
             return OperationResult.Ok();

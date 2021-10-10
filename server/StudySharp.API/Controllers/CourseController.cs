@@ -47,6 +47,7 @@ namespace StudySharp.API.Controllers
             return OperationResult.Ok(response);
         }
 
+        // did not work because of mapper exception (wtf)
         [HttpGet]
         [Route("~/api/teachers/{teacherId:int}/courses")]
         public async Task<OperationResult<GetCoursesByTeacherIdResponse>> GetCoursesByTeacherId([FromRoute] GetCoursesByTeacherIdRequest getCoursesByTeacherIdRequest)

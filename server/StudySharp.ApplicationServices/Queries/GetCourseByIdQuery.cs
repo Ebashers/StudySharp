@@ -16,7 +16,7 @@ namespace StudySharp.ApplicationServices.Queries
         public int Id { get; set; }
     }
 
-    public class GetCourseByIdQueryValidator : AbstractValidator<GetCourseByIdQuery>
+    public partial class GetCourseByIdQueryValidator : AbstractValidator<GetCourseByIdQuery>
     {
         public GetCourseByIdQueryValidator(ICourseRules rules)
         {

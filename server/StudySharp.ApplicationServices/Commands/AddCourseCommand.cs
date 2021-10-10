@@ -25,13 +25,13 @@ namespace StudySharp.ApplicationServices.Commands
             RuleFor(_ => _.Name)
                 .NotEmpty()
                 .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Course.Name)))
-                .MustAsync((_, token) => rules.IsNameUniqueAsync(_, token))
+                .MustAsync(rules.IsNameUniqueAsync)
                 .WithMessage(_ => string.Format(ErrorConstants.EntityAlreadyExists, nameof(Course), nameof(Course.Name), _.Name));
 
             RuleFor(_ => _.TeacherId)
                 .NotEmpty()
                 .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Course.TeacherId)))
-                .MustAsync((_, token) => rules.IsTeacherIdExistAsync(_, token))
+                .MustAsync(rules.IsTeacherIdExistAsync)
                 .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Teacher), nameof(Teacher.Id), _.TeacherId));
         }
     }
@@ -47,9 +47,7 @@ namespace StudySharp.ApplicationServices.Commands
 
         public async Task<OperationResult> Handle(AddCourseCommand request, CancellationToken cancellationToken)
         {
-            if (await _context.Courses.AnyAsync(
-                _ => _.Name.ToLower().Equals(request.Name.ToLower()) && _.TeacherId == request.TeacherId,
-                cancellationToken))
+            if (await _context.Courses.AnyAsync(_ => _.Name.ToLower().Equals(request.Name.ToLower()) && _.TeacherId == request.TeacherId))
             {
                 return OperationResult.Fail(string.Format(ErrorConstants.EntityAlreadyExists, nameof(Course), nameof(Course.Name), request.Name));
             }
