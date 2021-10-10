@@ -21,7 +21,7 @@ namespace StudySharp.ApplicationServices.Queries
         public GetCourseByIdQueryValidator(ICourseRules rules)
         {
             RuleFor(_ => _.Id)
-                .MustAsync((_, token) => rules.IsCourseIdExistAsync(_, token))
+                .MustAsync(rules.IsCourseIdExistAsync)
                 .WithMessage(_ => string.Format(ErrorConstants.EntityNotFound, nameof(Course), nameof(Course.Id), _.Id));
         }
     }
@@ -37,7 +37,7 @@ namespace StudySharp.ApplicationServices.Queries
 
         public async Task<OperationResult<Course>> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            var course = await _context.Courses.FindAsync(request.Id, cancellationToken);
+            var course = await _context.Courses.FindAsync(request.Id);
             return OperationResult.Ok(course);
         }
     }
