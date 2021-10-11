@@ -3,7 +3,11 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StudySharp.API.Requests.Courses;
+using StudySharp.API.Requests.PracticalBlocks;
+using StudySharp.API.Requests.TheoryBlocks;
 using StudySharp.API.Responses.Courses;
+using StudySharp.API.Responses.PracticalBlocks;
+using StudySharp.API.Responses.TheoryBlocks;
 using StudySharp.ApplicationServices.Commands;
 using StudySharp.ApplicationServices.Queries;
 using StudySharp.Domain.General;
@@ -99,6 +103,130 @@ namespace StudySharp.API.Controllers
         {
             var removeCourseByIdCommand = _mapper.Map<RemoveCourseByIdCommand>(removeCourseByIdRequest);
             return await _mediator.Send(removeCourseByIdCommand);
+        }
+
+        [HttpPost("{courseId:int}/theory-blocks")]
+        public async Task<OperationResult> Add([FromRoute] int courseId, [FromBody] AddTheoryBlockRequest addTheoryBlockRequest)
+        {
+            var addTheoryBlockCommand = _mapper.Map<AddTheoryBlockCommand>(addTheoryBlockRequest);
+            addTheoryBlockCommand.CourseId = courseId;
+            return await _mediator.Send(addTheoryBlockCommand);
+        }
+
+        [HttpGet("{courseId:int}/theory-blocks/{id:int}")]
+        public async Task<OperationResult<GetTheoryBlockByIdResponse>> GetTheoryBlockById([FromRoute] GetTheoryBlockByIdRequest getTheoryBlockByIdRequest)
+        {
+            var getTheoryBlockByIdQuery = _mapper.Map<GetTheoryBlockByIdQuery>(getTheoryBlockByIdRequest);
+            var operationResult = await _mediator.Send(getTheoryBlockByIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetTheoryBlockByIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetTheoryBlockByIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpGet("{courseId:int}/theory-blocks")]
+        public async Task<OperationResult<GetTheoryBlocksByCourseIdResponse>> GetTheoryBlocksByCourseId([FromRoute] GetTheoryBlocksByCourseIdRequest getTheoryBlockByCourseIdRequest)
+        {
+            var getTheoryBlockByCourseIdQuery = _mapper.Map<GetTheoryBlocksByCourseIdQuery>(getTheoryBlockByCourseIdRequest);
+            var operationResult = await _mediator.Send(getTheoryBlockByCourseIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetTheoryBlocksByCourseIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetTheoryBlocksByCourseIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpPut("{courseId:int}/theory-blocks/{id:int}")]
+        public async Task<OperationResult<UpdateTheoryBlockResponse>> Update([FromRoute] int id, [FromRoute] int courseId, [FromBody] UpdateTheoryBlockByIdRequest updateTheoryBlockByIdRequest)
+        {
+            var updateTheoryBlockCommand = _mapper.Map<UpdateTheoryBlockCommand>(updateTheoryBlockByIdRequest);
+            updateTheoryBlockCommand.Id = id;
+            updateTheoryBlockCommand.CourseId = courseId;
+            var operationResult = await _mediator.Send(updateTheoryBlockCommand);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<UpdateTheoryBlockResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<UpdateTheoryBlockResponse>(operationResult);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpDelete("{courseId:int}/theory-blocks/{id:int}")]
+        public async Task<OperationResult> Remove([FromRoute] RemoveTheoryBlockByIdRequest removeTheoryBlockByIdRequest)
+        {
+            var removeTheoryBlockByIdCommand = _mapper.Map<RemoveTheoryBlockByIdCommand>(removeTheoryBlockByIdRequest);
+            return await _mediator.Send(removeTheoryBlockByIdCommand);
+        }
+
+        [HttpPost("{courseId:int}/practical-blocks")]
+        public async Task<OperationResult> Add([FromRoute] int courseId, [FromBody] AddPracticalBlockRequest addPracticalBlockRequest)
+        {
+            var addPracticalBlockCommand = _mapper.Map<AddPracticalBlockCommand>(addPracticalBlockRequest);
+            addPracticalBlockCommand.CourseId = courseId;
+            return await _mediator.Send(addPracticalBlockCommand);
+        }
+
+        [HttpGet("{courseId:int}/practical-blocks/{id:int}")]
+        public async Task<OperationResult<GetPracticalBlockByIdResponse>> GetPracticalBlockById([FromRoute] GetPracticalBlockByIdRequest getPracticalBlockByIdRequest)
+        {
+            var getPracticalBlockByIdQuery = _mapper.Map<GetPracticalBlockByIdQuery>(getPracticalBlockByIdRequest);
+            var operationResult = await _mediator.Send(getPracticalBlockByIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetPracticalBlockByIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetPracticalBlockByIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpGet("{courseId:int}/practical-blocks")]
+        public async Task<OperationResult<GetPracticalBlocksByCourseIdResponse>> GetPracticalBlocksByCourseId([FromRoute] GetPracticalBlocksByCourseIdRequest getPracticalBlockByCourseIdRequest)
+        {
+            var getPracticalBlockByCourseIdQuery = _mapper.Map<GetPracticalBlocksByCourseIdQuery>(getPracticalBlockByCourseIdRequest);
+            var operationResult = await _mediator.Send(getPracticalBlockByCourseIdQuery);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<GetPracticalBlocksByCourseIdResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<GetPracticalBlocksByCourseIdResponse>(operationResult.Result);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpPut("{courseId:int}/practical-blocks/{id:int}")]
+        public async Task<OperationResult<UpdatePracticalBlockResponse>> Update([FromRoute] int id, [FromRoute] int courseId, [FromBody] UpdatePracticalBlockByIdRequest updatePracticalBlockByIdRequest)
+        {
+            var updatePracticalBlockCommand = _mapper.Map<UpdatePracticalBlockCommand>(updatePracticalBlockByIdRequest);
+            updatePracticalBlockCommand.Id = id;
+            updatePracticalBlockCommand.CourseId = courseId;
+            var operationResult = await _mediator.Send(updatePracticalBlockCommand);
+
+            if (!operationResult.IsSucceeded)
+            {
+                return OperationResult.Fail<UpdatePracticalBlockResponse>(operationResult.Errors);
+            }
+
+            var response = _mapper.Map<UpdatePracticalBlockResponse>(operationResult);
+            return OperationResult.Ok(response);
+        }
+
+        [HttpDelete("{courseId:int}/practical-blocks/{id:int}")]
+        public async Task<OperationResult> Remove([FromRoute] RemovePracticalBlockByIdRequest removePracticalBlockByIdRequest)
+        {
+            var removePracticalBlockByIdCommand = _mapper.Map<RemovePracticalBlockByIdCommand>(removePracticalBlockByIdRequest);
+            return await _mediator.Send(removePracticalBlockByIdCommand);
         }
     }
 }
