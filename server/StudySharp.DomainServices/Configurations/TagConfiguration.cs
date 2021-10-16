@@ -4,7 +4,7 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.DomainServices.Configurations
 {
-    public class TagConfiguration : IEntityTypeConfiguration<Tag>
+    public sealed class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
         public void Configure(EntityTypeBuilder<Tag> builder)
         {

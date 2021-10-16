@@ -4,7 +4,7 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.DomainServices.Configurations
 {
-    public class TheoryBlockConfiguration : IEntityTypeConfiguration<TheoryBlock>
+    public sealed class TheoryBlockConfiguration : IEntityTypeConfiguration<TheoryBlock>
     {
         public void Configure(EntityTypeBuilder<TheoryBlock> builder)
         {

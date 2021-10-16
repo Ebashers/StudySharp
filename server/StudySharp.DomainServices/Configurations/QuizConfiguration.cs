@@ -4,7 +4,7 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.DomainServices.Configurations
 {
-    public class QuizConfiguration : IEntityTypeConfiguration<Quiz>
+    public sealed class QuizConfiguration : IEntityTypeConfiguration<Quiz>
     {
         public void Configure(EntityTypeBuilder<Quiz> builder)
         {
