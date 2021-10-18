@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using StudySharp.ApplicationServices.ValidationRules;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;

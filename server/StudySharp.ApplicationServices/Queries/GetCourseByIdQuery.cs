@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
-using StudySharp.ApplicationServices.ValidationRules;
 using StudySharp.Domain.Constants;
 using StudySharp.Domain.General;
 using StudySharp.Domain.Models;
