@@ -12,14 +12,14 @@ namespace StudySharp.API.Controllers
 {
     // [Authorize]
     [ApiController]
-    [Route("api/courses")]
+    [Route("api/tags")]
 
-    public class TagController : ControllerBase
+    public class GetTagsController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public TagController(IMediator mediator, IMapper mapper)
+        public GetTagsController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
