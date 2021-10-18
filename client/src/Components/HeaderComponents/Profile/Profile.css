@@ -1,0 +1,15 @@
+.profile{
+    height: 64px;
+    position: absolute;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile__icon{
+    color: white;
+    height: 32px;
+    cursor: pointer;
+}
+

@@ -1,0 +1,25 @@
+.nav{
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    width: 435px;
+    margin-left: 80px;
+}
+
+
+a{
+    text-decoration: none;
+    color: white;
+    font-family: Mont, sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 100%;
+}
