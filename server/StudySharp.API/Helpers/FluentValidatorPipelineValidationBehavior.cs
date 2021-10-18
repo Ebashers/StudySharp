@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 
-namespace StudySharp.API.Middlewares
+namespace StudySharp.API.Helpers
 {
     public class FluentValidatorPipelineValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
