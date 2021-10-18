@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,8 @@ namespace StudySharp.API
                 .AddDomainServices(Configuration)
                 .AddApplicationServices(Configuration)
                 .AddEmailService(Configuration, "EmailConfig")
-                .AddAutoMapper(Assembly.GetExecutingAssembly());
+                .AddAutoMapper(Assembly.GetExecutingAssembly())
+                .AddScoped(typeof(IPipelineBehavior<,>), typeof(FluentValidatorPipelineValidationBehavior<,>));
             services.AddControllers(options =>
                 {
                     options.Filters.Add(typeof(ValidateModelStateAttribute));
