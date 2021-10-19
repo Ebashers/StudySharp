@@ -15,7 +15,7 @@ using StudySharp.Domain.General;
 
 namespace StudySharp.API.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/courses")]
 

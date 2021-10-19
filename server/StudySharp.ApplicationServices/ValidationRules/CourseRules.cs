@@ -15,9 +15,9 @@ namespace StudySharp.ApplicationServices.ValidationRules
             _context = context;
         }
 
-        public async Task<bool> IsNameUniqueAsync(string name, CancellationToken cancellationToken)
+        public async Task<bool> IsNameUniqueAsync(string name, int teacherId, CancellationToken cancellationToken)
         {
-            return !await _context.Courses.AnyAsync(_ => _.Name == name, cancellationToken);
+            return !await _context.Courses.AnyAsync(_ => _.Name == name && _.TeacherId == teacherId, cancellationToken);
         }
 
         public async Task<bool> IsCourseIdExistAsync(int id, CancellationToken cancellationToken)

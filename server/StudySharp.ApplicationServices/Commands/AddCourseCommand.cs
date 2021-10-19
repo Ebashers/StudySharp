@@ -21,10 +21,10 @@ namespace StudySharp.ApplicationServices.Commands
     {
         public AddCourseCommandValidator(ICourseRules rules)
         {
-            RuleFor(_ => _.Name)
+            RuleFor(_ => new { _.Name, _.TeacherId })
                 .NotEmpty()
                 .WithMessage(string.Format(ErrorConstants.FieldIsRequired, nameof(Course.Name)))
-                .MustAsync(rules.IsNameUniqueAsync)
+                .MustAsync((courseTeacherAndName, token) => rules.IsNameUniqueAsync(courseTeacherAndName.Name, courseTeacherAndName.TeacherId, token))
                 .WithMessage(_ => string.Format(ErrorConstants.EntityAlreadyExists, nameof(Course), nameof(Course.Name), _.Name));
 
             RuleFor(_ => _.TeacherId)
