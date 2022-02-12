@@ -65,7 +65,7 @@ namespace StudySharp.ApplicationServices.Commands.Auth
                 return OperationResult.Fail(userRegisteredResult.Errors.Select(_ => _.Description).ToList());
             }
 
-            var userObtainedRoleStudentResult = await _userManager.AddToRoleAsync(newUser, DomainRoles.Student.ToString());
+            var userObtainedRoleStudentResult = await _userManager.AddToRoleAsync(newUser, DomainRoles.DomainUser.ToString());
 
             if (!userObtainedRoleStudentResult.Succeeded)
             {

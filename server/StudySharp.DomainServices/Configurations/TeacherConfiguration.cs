@@ -4,7 +4,7 @@ using StudySharp.Domain.Models;
 
 namespace StudySharp.DomainServices.Configurations
 {
-    public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
+    public sealed class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
     {
         public void Configure(EntityTypeBuilder<Teacher> builder)
         {
@@ -12,12 +12,9 @@ namespace StudySharp.DomainServices.Configurations
                 .HasKey(_ => _.Id);
 
             builder
-                .Property(_ => _.FirstName)
-                .IsRequired();
-
-            builder
-                .Property(_ => _.LastName)
-                .IsRequired();
+                .HasMany(_ => _.Courses)
+                .WithOne(_ => _.Teacher)
+                .HasForeignKey(_ => _.TeacherId);
         }
     }
 }

@@ -12,6 +12,9 @@ namespace StudySharp.DomainServices
 {
     public class StudySharpDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
+        public DbSet<DomainUser> DomainUsers { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<OrganizationRepresentative> OrganizationRepresentatives { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<PracticalBlock> PracticalBlocks { get; set; }
